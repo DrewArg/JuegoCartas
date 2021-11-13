@@ -2,16 +2,14 @@ package utilidades;
 
 public class AsignadorCaracteristica {
 
-    public static String asignarId(int contadorId, int mazoSeleccionado) {
+    public static int asignarId(int contadorId, int mazoSeleccionado) {
         if (mazoSeleccionado == 0) {
-            return "T" + contadorId;
+            return contadorId;
         } else if (mazoSeleccionado == 1) {
-            return "A" + contadorId;
+            return contadorId;
         } else {
-            return "V" + contadorId;
+            return contadorId;
         }
     }
-
-    
 
 }

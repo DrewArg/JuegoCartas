@@ -1,20 +1,26 @@
 package domain.derivada.habilidad.habilidadAcuatica;
 
+import javax.swing.JOptionPane;
+
 import domain.base.Habilidad;
 
 public class Fortalecimiento extends Habilidad {
-    private String id;
+    private int id;
     private String nombre;
     private String tipo;
     private String efecto;
     private int coste;
 
-    public Fortalecimiento(String id) {
+    private boolean sePuedeBajarAlTablero;
+
+    public Fortalecimiento(int id) {
         this.id = id;
         nombre = "Enamoramiento";
         tipo = "Habilidad";
         efecto = "Si tienes un Tiburón Blanco en juego, este gana +3 de daño. Si tienes un Tiburón Blanco en tu cementerio, puedes revivirlo sin pagar su coste.";
         coste = 6;
+
+        sePuedeBajarAlTablero = false;
     }
 
     @Override
@@ -30,7 +36,7 @@ public class Fortalecimiento extends Habilidad {
     }
 
     @Override
-    public String getId() {
+    public int getId() {
         // TODO Auto-generated method stub
         return id;
     }
@@ -43,13 +49,20 @@ public class Fortalecimiento extends Habilidad {
 
     @Override
     public void activarEfecto() {
-        // TODO Auto-generated method stub
-
+        JOptionPane.showMessageDialog(null, "Has activado esta habilidad pero aun no está codeada", "Habilidad activa", 2);
     }
 
     @Override
     public int getCoste() {
         // TODO Auto-generated method stub
         return coste;
+    }
+
+    public boolean isSePuedeBajarAlTablero() {
+        return sePuedeBajarAlTablero;
+    }
+
+    public void setSePuedeBajarAlTablero(boolean sePuedeBajarAlTablero) {
+        this.sePuedeBajarAlTablero = sePuedeBajarAlTablero;
     }
 }

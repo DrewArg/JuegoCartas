@@ -1,20 +1,26 @@
 package domain.derivada.habilidad.habilidadTerrestre;
 
+import javax.swing.JOptionPane;
+
 import domain.base.Habilidad;
 
 public class Aullido extends Habilidad {
-    private String id;
+    private int id;
     private String nombre;
     private String tipo;
     private String efecto;
     private int coste;
 
-    public Aullido(String id) {
+    private boolean sePuedeBajarAlTablero;
+
+    public Aullido(int id) {
         this.id = id;
         nombre = "Aullido";
         tipo = "Habilidad";
         efecto = "Si tienes un Lobo Gris en juego, puedes jugar a otro desde tu mazo o mano sin pagar su coste.";
         coste = 2;
+
+        sePuedeBajarAlTablero = false;
     }
 
     @Override
@@ -30,7 +36,7 @@ public class Aullido extends Habilidad {
     }
 
     @Override
-    public String getId() {
+    public int getId() {
         // TODO Auto-generated method stub
         return id;
     }
@@ -43,7 +49,7 @@ public class Aullido extends Habilidad {
 
     @Override
     public void activarEfecto() {
-        // TODO Auto-generated method stub
+        JOptionPane.showMessageDialog(null, "Has activado esta habilidad pero aun no está codeada", "Habilidad activa", 2);
 
     }
 
@@ -51,6 +57,14 @@ public class Aullido extends Habilidad {
     public int getCoste() {
         // TODO Auto-generated method stub
         return coste;
+    }
+
+    public boolean isSePuedeBajarAlTablero() {
+        return sePuedeBajarAlTablero;
+    }
+
+    public void setSePuedeBajarAlTablero(boolean sePuedeBajarAlTablero) {
+        this.sePuedeBajarAlTablero = sePuedeBajarAlTablero;
     }
 
 }

@@ -6,7 +6,7 @@ public abstract class Habilidad implements Carta {
 
     public abstract String getTipo();
 
-    public abstract String getId();
+    public abstract int getId();
 
     public abstract String getEfecto();
 

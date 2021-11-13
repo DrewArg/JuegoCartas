@@ -7,8 +7,10 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import domain.base.Alimento;
+import domain.base.Animal;
 import domain.base.Carta;
-import domain.derivada.Jugador;
+import domain.base.Habilidad;
+import domain.base.Habitat;
 import domain.derivada.animal.animalAcuatico.PezPayaso;
 import domain.derivada.animal.animalAcuatico.Pulpo;
 import domain.derivada.animal.animalAcuatico.TiburonBlanco;
@@ -36,9 +38,15 @@ public class CartaService {
     private List<Carta> cartasTablero = new ArrayList<Carta>();
 
     public void llenarMazoCartas(int mazoSeleccionado) {
-        // se llena el mazo con cartas y luego se mezcla
 
-        int contadorId = 1;
+        int contadorId = 0;
+
+        if (mazoSeleccionado == 0) {
+            contadorId = 100;
+
+        } else if (mazoSeleccionado == 1) {
+            contadorId = 200;
+        }
 
         int limiteDeCartas = 25;
         int cantidadCartasMazo = 0;
@@ -56,7 +64,7 @@ public class CartaService {
         int limiteHabitat = 3;
 
         while (cantidadCartasMazo < limiteDeCartas) {
-            String id = AsignadorCaracteristica.asignarId(contadorId, mazoSeleccionado);
+            int id = AsignadorCaracteristica.asignarId(contadorId, mazoSeleccionado);
             if (contadorAlimentos < limiteAlimentos) {
                 cartasMazo.add(new Alimento(id));
                 contadorAlimentos++;
@@ -202,8 +210,7 @@ public class CartaService {
         Collections.shuffle(cartasMazo);
     }
 
-    public void robarMultiplesCartas(Jugador jugador, int cantidadCartas) {
-
+    public void robarMultiplesCartas(int cantidadCartas) {
         List<Carta> auxiliar = new ArrayList<Carta>();
         for (int i = 1; i <= cantidadCartas; i++) {
             Carta ultimaCartaMazo = cartasMazo.get(cartasMazo.size() - i);
@@ -211,9 +218,7 @@ public class CartaService {
             auxiliar.add(ultimaCartaMazo);
         }
 
-        JOptionPane.showMessageDialog(null, jugador.getNombre() + " ha robado " + cantidadCartas + " cartas del mazo.");
-
-        Inspector.inspeccionarMultiplesCartas(auxiliar);
+        Inspector.inspeccionarMultiplesCartasPorZona(auxiliar);
 
         cartasEnMano.addAll(auxiliar);
         cartasMazo.removeAll(auxiliar);
@@ -221,16 +226,196 @@ public class CartaService {
 
     }
 
-    public void robarCarta(Jugador jugador) {
+    public void robarCarta() {
         Carta ultimaCartaMazo = cartasMazo.get(cartasMazo.size() - 1);
 
         cartasEnMano.add(ultimaCartaMazo);
         cartasMazo.remove(ultimaCartaMazo);
 
-        JOptionPane.showMessageDialog(null, jugador.getNombre() + " ha robado una carta del mazo.");
-
         Inspector.inspeccionarCarta(ultimaCartaMazo);
 
+    }
+
+    public void bajarCartaAlTablero() {
+        int reservaAlimentos = cantidadAlimentosEnReserva();
+
+        List<Carta> removedorCartas = new ArrayList<Carta>();
+
+        boolean cartasDisponibles = Inspector.inspeccionarCartasDisponiblesParaBajar(cartasEnMano, reservaAlimentos);
+        boolean cartaEncontrada = false;
+
+        if (cartasDisponibles) {
+
+            List<Carta> cartasDisponiblesParaBajar = new ArrayList<Carta>();
+            for (Carta carta : cartasEnMano) {
+                if (carta.isSePuedeBajarAlTablero()) {
+                    cartasDisponiblesParaBajar.add(carta);
+                }
+            }
+
+            boolean alimentoBajadoAlTablero = false;
+
+            JOptionPane.showMessageDialog(null, "Actualmente tienes " + reservaAlimentos
+                    + " alimentos en tu reserva. \n-Recuerda que sólo puedes bajar un alimento por turno y este debe ser bajado antes que cualquier otra carta.-",
+                    "Alimentos en tu reserva", 1);
+
+            Inspector.inspeccionarMultiplesCartasPorZona(cartasDisponiblesParaBajar);
+
+            int cartaABajar = Integer.parseInt(
+                    JOptionPane.showInputDialog(null, "-Ingresa el [ID] de la carta a bajar.-", "[ID] completo", 1));
+
+            for (Carta carta : cartasDisponiblesParaBajar) {
+
+                if (carta.getId() == (cartaABajar)) {
+
+                    cartaEncontrada = true;
+
+                    if (carta instanceof Alimento) {
+                        Alimento alimento = (Alimento) carta;
+
+                        if (!alimentoBajadoAlTablero) {
+                            JOptionPane.showMessageDialog(null, "Has agregado un alimento a tu reserva.",
+                                    "Reserva de alimentos", 1);
+
+                            alimento.setEnReservaDeAlimentos(true);
+                            cartasTablero.add(alimento);
+                            removedorCartas.add(alimento);
+                            alimentoBajadoAlTablero = true;
+
+                        } else {
+
+                            JOptionPane.showMessageDialog(null,
+                                    "Ya has bajado un alimento este turno o bien has bajado otro tipo de carta antes.",
+                                    "Reserva de alimentos", 2);
+                        }
+
+                    } else if (carta instanceof Animal) {
+                        Animal animal = (Animal) carta;
+
+                        if (reservaAlimentos >= animal.getCoste()) {
+                            JOptionPane.showMessageDialog(null, "Has agregado un animal a tu linea defensvia",
+                                    "Linea defensiva", 1);
+                            if (animal.getCoste() == 0) {
+
+                            } else {
+                                int alimentosConsumidos = 0;
+
+                                for (Carta carta2 : cartasTablero) {
+                                    Alimento alimentoDisponible = (Alimento) carta2;
+                                    if (alimentoDisponible.isEnReservaDeAlimentos()) {
+                                        if (alimentosConsumidos < animal.getCoste()) {
+                                            alimentoDisponible.setAlimentoConsumido(true);
+                                            alimentoDisponible.setEnReservaDeAlimentos(false);
+                                            alimentosConsumidos++;
+                                        }
+                                    }
+                                }
+                            }
+
+                            animal.setEnLineaDefensiva(true);
+                            cartasTablero.add(animal);
+                            removedorCartas.add(animal);
+                            alimentoBajadoAlTablero = true;
+
+                        } else {
+                            JOptionPane.showMessageDialog(null,
+                                    "Actualmente no tienes alimentos suficientes para pagar el coste de esta carta.",
+                                    "Alimentos faltantes", 2);
+                        }
+
+                    } else if (carta instanceof Habilidad) {
+                        Habilidad habilidad = (Habilidad) carta;
+
+                        if (reservaAlimentos >= habilidad.getCoste()) {
+                            JOptionPane.showMessageDialog(null, "Has activado una habilidad", "Habilidad activa", 2);
+
+                            if (habilidad.getCoste() == 0) {
+
+                            } else {
+                                int alimentosConsumidos = 0;
+                                for (Carta carta2 : cartasTablero) {
+                                    Alimento alimentoDisponible = (Alimento) carta2;
+                                    if (alimentoDisponible.isEnReservaDeAlimentos()) {
+                                        if (alimentosConsumidos < habilidad.getCoste()) {
+                                            alimentoDisponible.setAlimentoConsumido(true);
+                                            alimentoDisponible.setEnReservaDeAlimentos(false);
+                                            alimentosConsumidos++;
+                                        }
+                                    }
+                                }
+                            }
+
+                            habilidad.activarEfecto();
+                            removedorCartas.add(habilidad);
+                            alimentoBajadoAlTablero = true;
+
+                        } else {
+                            JOptionPane.showMessageDialog(null,
+                                    "Actualmente no tienes alimentos suficientes para pagar el coste de esta carta.",
+                                    "Alimentos faltantes", 2);
+                        }
+
+                    } else if (carta instanceof Habitat) {
+                        Habitat habitat = (Habitat) carta;
+
+                        if (reservaAlimentos >= habitat.getCoste()) {
+                            JOptionPane.showMessageDialog(null, "Has agregado un animal a tu linea defensvia",
+                                    "Linea defensiva", 1);
+                            if (habitat.getCoste() == 0) {
+
+                            } else {
+                                int alimentosConsumidos = 0;
+
+                                for (Carta carta2 : cartasTablero) {
+                                    Alimento alimentoDisponible = (Alimento) carta2;
+                                    if (alimentoDisponible.isEnReservaDeAlimentos()) {
+                                        if (alimentosConsumidos < habitat.getCoste()) {
+                                            alimentoDisponible.setAlimentoConsumido(true);
+                                            alimentoDisponible.setEnReservaDeAlimentos(false);
+                                            alimentosConsumidos++;
+                                        }
+                                    }
+                                }
+                            }
+
+                            habitat.setEnLineaApoyo(true);
+                            cartasTablero.add(habitat);
+                            removedorCartas.add(habitat);
+                            alimentoBajadoAlTablero = true;
+                        } else {
+                            JOptionPane.showMessageDialog(null,
+                                    "Actualmente no tienes alimentos suficientes para pagar el coste de esta carta.",
+                                    "Alimentos faltantes", 2);
+                        }
+
+                    }
+
+                }
+            }
+
+            cartasEnMano.removeAll(removedorCartas);
+            cartasDisponiblesParaBajar.clear();
+            removedorCartas.clear();
+
+            System.out.println("carta encontrada: " + cartaEncontrada);
+            if (!cartaEncontrada) {
+
+                JOptionPane.showMessageDialog(null, "Has ingresado un [ID] incorrecto", "[ID] incorrecto", 0);
+                bajarCartaAlTablero();
+
+            }
+        } // sin cartas disponibles
+    }
+
+    public int cantidadAlimentosEnReserva() {
+
+        List<Carta> alimentos = new ArrayList<Carta>();
+
+        cartasTablero.stream()
+                .filter((carta) -> carta instanceof Alimento && ((Alimento) carta).isEnReservaDeAlimentos())
+                .forEach((carta) -> alimentos.add(carta));
+
+        return alimentos.size();
     }
 
 }

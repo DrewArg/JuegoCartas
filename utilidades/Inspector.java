@@ -1,5 +1,6 @@
 package utilidades;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -37,7 +38,7 @@ public class Inspector {
         }
     }
 
-    public static void inspeccionarMultiplesCartas(List<Carta> zonaAInspeccionar) {
+    public static void inspeccionarMultiplesCartasPorZona(List<Carta> zonaAInspeccionar) {
 
         if (zonaAInspeccionar.size() == 0) {
 
@@ -77,8 +78,105 @@ public class Inspector {
                 }
             }
 
-            JOptionPane.showMessageDialog(null, cartasInspeccionadas);
+            JOptionPane.showMessageDialog(null, cartasInspeccionadas, "Cartas disponibles para bajar", 1);
         }
 
     }
+
+    public static boolean inspeccionarCartasDisponiblesParaBajar(List<Carta> cartasEnMano, int reservaAlimentos) {
+        boolean alimentoEnMano = false;
+        boolean cartasDisponibles;
+        int cartasParaBajar = 0;
+
+        for (Carta carta : cartasEnMano) {
+            if (carta instanceof Alimento) {
+                alimentoEnMano = true;
+            }
+        }
+
+        for (Carta carta : cartasEnMano) {
+            if (alimentoEnMano == true) {
+                if (carta instanceof Alimento) {
+                    Alimento alimento = (Alimento) carta;
+                    alimento.setSePuedeBajarAlTablero(true);
+
+                } else if (carta instanceof Animal) {
+                    Animal animal = (Animal) carta;
+                    if (animal.getCoste() <= reservaAlimentos + 1) {
+                        animal.setSePuedeBajarAlTablero(true);
+
+                    } else {
+                        animal.setSePuedeBajarAlTablero(false);
+                    }
+
+                } else if (carta instanceof Habilidad) {
+                    Habilidad habilidad = (Habilidad) carta;
+                    if (habilidad.getCoste() <= reservaAlimentos + 1) {
+                        habilidad.setSePuedeBajarAlTablero(true);
+                    } else {
+                        habilidad.setSePuedeBajarAlTablero(false);
+                    }
+
+                } else if (carta instanceof Habitat) {
+                    Habitat habitat = (Habitat) carta;
+                    if (habitat.getCoste() <= reservaAlimentos + 1) {
+                        habitat.setSePuedeBajarAlTablero(true);
+                    } else {
+                        habitat.setSePuedeBajarAlTablero(false);
+                    }
+
+                }
+
+            } else {
+                if (carta instanceof Alimento) {
+                    Alimento alimento = (Alimento) carta;
+                    alimento.setSePuedeBajarAlTablero(true);
+
+                } else if (carta instanceof Animal) {
+                    Animal animal = (Animal) carta;
+                    if (animal.getCoste() <= reservaAlimentos) {
+                        animal.setSePuedeBajarAlTablero(true);
+
+                    } else {
+                        animal.setSePuedeBajarAlTablero(false);
+                    }
+
+                } else if (carta instanceof Habilidad) {
+                    Habilidad habilidad = (Habilidad) carta;
+                    if (habilidad.getCoste() <= reservaAlimentos) {
+                        habilidad.setSePuedeBajarAlTablero(true);
+                    } else {
+                        habilidad.setSePuedeBajarAlTablero(false);
+                    }
+
+                } else if (carta instanceof Habitat) {
+                    Habitat habitat = (Habitat) carta;
+                    if (habitat.getCoste() <= reservaAlimentos) {
+                        habitat.setSePuedeBajarAlTablero(true);
+                    } else {
+                        habitat.setSePuedeBajarAlTablero(false);
+                    }
+
+                }
+
+            }
+        }
+
+        for (Carta carta : cartasEnMano) {
+            if (carta.isSePuedeBajarAlTablero()) {
+                cartasParaBajar++;
+            }
+        }
+
+        if (cartasParaBajar <= 0) {
+
+            cartasDisponibles = false;
+        } else {
+
+            cartasDisponibles = true;
+        }
+
+        return cartasDisponibles;
+    };
+
 }

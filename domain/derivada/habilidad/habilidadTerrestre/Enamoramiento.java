@@ -1,20 +1,26 @@
 package domain.derivada.habilidad.habilidadTerrestre;
 
+import javax.swing.JOptionPane;
+
 import domain.base.Habilidad;
 
 public class Enamoramiento extends Habilidad {
-    private String id;
+    private int id;
     private String nombre;
     private String tipo;
     private String efecto;
     private int coste;
 
-    public Enamoramiento(String id) {
+    private boolean sePuedeBajarAlTablero;
+
+    public Enamoramiento(int id) {
         this.id = id;
         nombre = "Enamoramiento";
         tipo = "Habilidad";
         efecto = "Toma el control de un animal enemigo hasta el fin de este turno.";
         coste = 6;
+
+        sePuedeBajarAlTablero = false;
     }
 
     @Override
@@ -30,7 +36,7 @@ public class Enamoramiento extends Habilidad {
     }
 
     @Override
-    public String getId() {
+    public int getId() {
         // TODO Auto-generated method stub
         return id;
     }
@@ -43,7 +49,8 @@ public class Enamoramiento extends Habilidad {
 
     @Override
     public void activarEfecto() {
-        // TODO Auto-generated method stub
+        JOptionPane.showMessageDialog(null, "Has activado esta habilidad pero aun no está codeada", "Habilidad activa",
+                2);
 
     }
 
@@ -51,5 +58,13 @@ public class Enamoramiento extends Habilidad {
     public int getCoste() {
         // TODO Auto-generated method stub
         return coste;
+    }
+
+    public boolean isSePuedeBajarAlTablero() {
+        return sePuedeBajarAlTablero;
+    }
+
+    public void setSePuedeBajarAlTablero(boolean sePuedeBajarAlTablero) {
+        this.sePuedeBajarAlTablero = sePuedeBajarAlTablero;
     }
 }

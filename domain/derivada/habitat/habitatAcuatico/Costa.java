@@ -3,18 +3,24 @@ package domain.derivada.habitat.habitatAcuatico;
 import domain.base.Habitat;
 
 public class Costa extends Habitat {
-    private String id;
+    private int id;
     private String nombre;
     private String tipo;
     private String efecto;
     private int coste;
 
-    public Costa(String id) {
+    private boolean sePuedeBajarAlTablero;
+    private boolean enLineaApoyo;
+
+    public Costa(int id) {
         this.id = id;
         nombre = "Costa";
         tipo = "Habitat";
         efecto = "Si tienes un Tiburón Blanco en juego, este gana +1 de daño por cada animal devorado hasta ser destruido.";
         coste = 6;
+
+        sePuedeBajarAlTablero = false;
+        enLineaApoyo = false;
     }
 
     @Override
@@ -30,7 +36,7 @@ public class Costa extends Habitat {
     }
 
     @Override
-    public String getId() {
+    public int getId() {
         // TODO Auto-generated method stub
         return id;
     }
@@ -51,5 +57,21 @@ public class Costa extends Habitat {
     public int getCoste() {
         // TODO Auto-generated method stub
         return coste;
+    }
+
+    public boolean isSePuedeBajarAlTablero() {
+        return sePuedeBajarAlTablero;
+    }
+
+    public void setSePuedeBajarAlTablero(boolean sePuedeBajarAlTablero) {
+        this.sePuedeBajarAlTablero = sePuedeBajarAlTablero;
+    }
+
+    public boolean isEnLineaApoyo() {
+        return enLineaApoyo;
+    }
+
+    public void setEnLineaApoyo(boolean enLineaApoyo) {
+        this.enLineaApoyo = enLineaApoyo;
     }
 }

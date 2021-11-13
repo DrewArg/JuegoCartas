@@ -3,14 +3,17 @@ package domain.derivada.animal.animalAcuatico;
 import domain.base.Animal;
 
 public class TortugaMarina extends Animal {
-    private String id;
+    private int id;
     private String nombre;
     private String tipo;
     private String efecto;
     private int coste;
     private int dano;
 
-    public TortugaMarina(String id) {
+    private boolean sePuedeBajarAlTablero;
+    private boolean enLineaDefensiva;
+    
+    public TortugaMarina(int id) {
         this.id = id;
         tipo = "Animal";
         nombre = "Tortuga Marina";
@@ -18,9 +21,12 @@ public class TortugaMarina extends Animal {
         coste = 3;
         dano = 2;
 
+        sePuedeBajarAlTablero = false;
+        enLineaDefensiva = false;
+
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
@@ -67,4 +73,20 @@ public class TortugaMarina extends Animal {
         // TODO Auto-generated method stub
 
     }
+
+    public boolean isSePuedeBajarAlTablero() {
+        return sePuedeBajarAlTablero;
+    }
+
+    public void setSePuedeBajarAlTablero(boolean sePuedeBajarAlTablero) {
+        this.sePuedeBajarAlTablero = sePuedeBajarAlTablero;
+    }
+
+    public boolean isEnLineaDefensiva() {
+        return enLineaDefensiva;
+    };
+
+    public void setEnLineaDefensiva(boolean enLineaDefensiva) {
+        this.enLineaDefensiva = enLineaDefensiva;
+    };
 }
