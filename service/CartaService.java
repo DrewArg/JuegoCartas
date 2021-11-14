@@ -100,6 +100,9 @@ public class CartaService {
                         cartasMazo.add(new MantisOrquidea(id));
                         break;
 
+                    default:
+                        break;
+
                     }
                 } else if (mazoSeleccionado == 1) {
                     switch (contadorAnimales) {
@@ -131,6 +134,9 @@ public class CartaService {
                         cartasMazo.add(new TiburonBlanco(id));
                         break;
 
+                    default:
+                        break;
+
                     }
                 }
 
@@ -152,6 +158,9 @@ public class CartaService {
                         cartasMazo.add(new Enamoramiento(id));
                         break;
 
+                    default:
+                        break;
+
                     }
                 } else if (mazoSeleccionado == 1) {
                     switch (contadorHabilidades) {
@@ -166,6 +175,8 @@ public class CartaService {
                         break;
                     case 3:
                         cartasMazo.add(new Fortalecimiento(id));
+                        break;
+                    default:
                         break;
 
                     }
@@ -182,6 +193,8 @@ public class CartaService {
                     case 2:
                         cartasMazo.add(new Orquidea(id));
                         break;
+                    default:
+                        break;
 
                     }
                 } else if (mazoSeleccionado == 1) {
@@ -194,6 +207,8 @@ public class CartaService {
                         break;
                     case 2:
                         cartasMazo.add(new Costa(id));
+                        break;
+                    default:
                         break;
 
                     }
