@@ -37,7 +37,6 @@ public class CartaService {
     private List<Carta> cartasEnMano = new ArrayList<Carta>();
     private List<Carta> cartasTablero = new ArrayList<Carta>();
 
-    // esto es del jugador
     public void llenarMazoCartas(int mazoSeleccionado) {
 
         int contadorId = 0;
@@ -222,12 +221,10 @@ public class CartaService {
         mezclarMazo();
     }
 
-    // esto es del jugador
     public void mezclarMazo() {
         Collections.shuffle(cartasMazo);
     }
 
-    // esto es del jugador
     public void robarMultiplesCartas(int cantidadCartas) {
         List<Carta> auxiliar = new ArrayList<Carta>();
         for (int i = 1; i <= cantidadCartas; i++) {
@@ -244,7 +241,23 @@ public class CartaService {
 
     }
 
-    // esto es del jugador
+    public void robarManoInicialCartas() {
+        int manoInicial = 4;
+        List<Carta> auxiliar = new ArrayList<Carta>();
+        for (int i = 1; i <= manoInicial; i++) {
+            Carta ultimaCartaMazo = cartasMazo.get(cartasMazo.size() - i);
+
+            auxiliar.add(ultimaCartaMazo);
+        }
+
+        Inspector.inspeccionarMultiplesCartasPorZona(auxiliar);
+
+        cartasEnMano.addAll(auxiliar);
+        cartasMazo.removeAll(auxiliar);
+        auxiliar.clear();
+
+    }
+
     public void robarCarta() {
         Carta ultimaCartaMazo = cartasMazo.get(cartasMazo.size() - 1);
 
@@ -255,7 +268,6 @@ public class CartaService {
 
     }
 
-    // esto es del jugador
     public void bajarCartaAlTablero() {
         int reservaAlimentos = contarAlimentosEnReserva();
 
@@ -427,7 +439,6 @@ public class CartaService {
         } // sin cartas disponibles
     }
 
-    // esto es del jugador
     public int contarAlimentosEnReserva() {
 
         List<Carta> alimentos = new ArrayList<Carta>();

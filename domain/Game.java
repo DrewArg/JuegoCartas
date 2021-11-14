@@ -43,13 +43,13 @@ public class Game {
                     if (jugadorService.validarUsuarioYContrasena(nombreUsuarioJugador2, contrasenaJugador2)) {
                         jugador2 = jugadorService.tomarJugador(nombreUsuarioJugador2, contrasenaJugador2);
 
-                        // ACÁ DEBERIA ARRANCAR EL TURNO 1 PASANDOLE EL JUGADOR 1 Y JUGADOR 2
+                        iniciarPartida(jugador1, jugador2);
 
                     } else {
 
                         while (!jugadorService.validarUsuarioYContrasena(nombreUsuarioJugador2, contrasenaJugador2)) {
 
-                            JOptionPane.showMessageDialog(null, "El usuario y/o contrseña son incorrectos",
+                            JOptionPane.showMessageDialog(null, "El usuario y/o contraseña son incorrectos",
                                     "Usuario y/o contraseña incorrectos", JOptionPane.ERROR_MESSAGE, null);
 
                             nombreUsuarioJugador2 = JOptionPane.showInputDialog(null,
@@ -60,7 +60,7 @@ public class Game {
                     }
 
                 } else {
-                    JOptionPane.showMessageDialog(null, "El usuario y/o contrseña son incorrectos",
+                    JOptionPane.showMessageDialog(null, "El usuario y/o contraseña son incorrectos",
                             "Usuario y/o contraseña incorrectos", JOptionPane.ERROR_MESSAGE, null);
                 }
 
@@ -112,9 +112,51 @@ public class Game {
 
                         JOptionPane.showMessageDialog(null, nombreUsuario2 + " ha sido registrado correctamente.");
 
-                        // ACÁ DEBERIA ARRANCAR EL TURNO 1 PASANDOLE EL JUGADOR 1 Y JUGADOR 2
+                        iniciarPartida(jugador1, jugador2);
                     }
 
+                }
+
+            } else if (opcionElegida == 2) {
+                String nombreUsuarioJugadorRegistrado = JOptionPane.showInputDialog(null,
+                        "Jugador ya registrado, ingresa tu nombre de usuario.", "Ingresa tu nombre de usuario.");
+                String contrasenaJugadorRegistrado = JOptionPane.showInputDialog(null,
+                        "Jugador ya registrado, ingresa tu contraseña.");
+
+                if (jugadorService.validarUsuarioYContrasena(nombreUsuarioJugadorRegistrado,
+                        contrasenaJugadorRegistrado)) {
+
+                    jugador1 = jugadorService.tomarJugador(nombreUsuarioJugadorRegistrado, contrasenaJugadorRegistrado);
+
+                    String nombreUsuarioJugadorNuevo = JOptionPane.showInputDialog(null,
+                            "Jugador nuevo, ingresa tu nombre de usuario.", "Ingresa tu nombre de usuario.");
+                    String contrasenaJugadorNuevo = JOptionPane.showInputDialog(null,
+                            "Jugador nuevo, ingresa tu contraseña", "Ingresa tu contraseña.");
+
+                    if (jugadorService.validarUsuarioYContrasena(nombreUsuarioJugadorNuevo, contrasenaJugadorNuevo)) {
+                        JOptionPane.showMessageDialog(null, "Usuario ya existente", "Registrar Usuario",
+                                JOptionPane.WARNING_MESSAGE);
+
+                        while (jugadorService.validarNombreUsuario(nombreUsuarioJugadorNuevo)) {
+
+                            nombreUsuarioJugadorNuevo = JOptionPane.showInputDialog(null,
+                                    "Jugador nuevo, ingrese su nombre de usuario.", "Ingresa tu nombre de usuario.");
+                            contrasenaJugadorNuevo = JOptionPane.showInputDialog(null,
+                                    "Jugador nuevo, ingrese su contraseña.", "Ingresa tu contraseña.");
+                        }
+
+                    } else {
+
+                        jugador2 = new Jugador(nombreUsuarioJugadorNuevo, contrasenaJugadorNuevo);
+                        String nombreUsuario2 = jugadorService.registrarUsuario(jugador2);
+
+                        JOptionPane.showMessageDialog(null, nombreUsuario2 + " ha sido registrado correctamente.");
+
+                        iniciarPartida(jugador1, jugador2);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "El usuario y/o contraseña son incorrectos",
+                            "Usuario y/o contraseña incorrectos", JOptionPane.ERROR_MESSAGE, null);
                 }
 
             }
@@ -125,11 +167,28 @@ public class Game {
         }
     }
 
-    private void registrarUsuario(int opcionElegida) {
-
+    private void iniciarPartida(Jugador jugador1, Jugador jugador2) {
+        iniciarTurno(jugador1);
+        iniciarTurno(jugador2);
     }
 
-    private void contarTurnos() {
+    private void iniciarTurno(Jugador jugador) {
+
+        if (jugador.getTurno() == 1) {
+            JOptionPane.showMessageDialog(null, "Primer turno de " + jugador.getnombreUsuario(), "Comienzo de partida",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+            JOptionPane.showMessageDialog(null, jugador.getnombreUsuario() + " has robado tu mano inicial.",
+                    "Mano Inicial", 1);
+
+            jugador.robarManoInicialCartas();
+
+        } else {
+            JOptionPane.showMessageDialog(null,
+                    "Turno " + jugador.getTurno() + ". ¿" + jugador.getnombreUsuario() + " qué deseas hacer?",
+                    "Nuevo turno", JOptionPane.INFORMATION_MESSAGE);
+            // menu de juego
+        }
 
     }
 }
