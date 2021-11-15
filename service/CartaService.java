@@ -234,6 +234,34 @@ public class CartaService {
         Collections.shuffle(cartasMazo);
     }
 
+    public void reagruparAlimentos() {
+
+        for (Carta carta : cartasTablero) {
+            if (carta instanceof Alimento) {
+                Alimento alimento = (Alimento) carta;
+                if (alimento.isAlimentoConsumido()) {
+                    alimento.setAlimentoConsumido(false);
+                    alimento.setEnReservaDeAlimentos(true);
+                }
+            }
+        }
+
+    }
+
+    public void reagruparAnimalesEnZonaBatalla() {
+
+        for (Carta carta : cartasTablero) {
+            if (carta instanceof Animal) {
+                Animal animal = (Animal) carta;
+                if (animal.isEnLineaDeBatalla()) {
+                    animal.setEnLineaDeBatalla(false);
+                    animal.setEnLineaDeReposo(true);
+                }
+
+            }
+        }
+    }
+
     public void robarManoInicialCartas() {
         int manoInicial = 4;
         List<Carta> auxiliar = new ArrayList<Carta>();
@@ -296,6 +324,103 @@ public class CartaService {
 
             cartasEnMano.addAll(auxiliar);
             cartasMazo.removeAll(auxiliar);
+            auxiliar.clear();
+        }
+
+    }
+
+    public void inspeccionarZonaJuego(Jugador jugadorActual, String zonaEscogida) {
+
+        List<Carta> auxiliar = new ArrayList<Carta>();
+
+        if (zonaEscogida.equalsIgnoreCase("cartasMano")) {
+            auxiliar.addAll(cartasEnMano);
+
+        } else if (zonaEscogida.equalsIgnoreCase("miReposo")) {
+
+            for (Carta carta : cartasTablero) {
+                if (carta instanceof Animal) {
+                    Animal animal = (Animal) carta;
+                    if (animal.isEnLineaDeReposo()) {
+                        auxiliar.add(animal);
+                    }
+                }
+            }
+
+        } else if (zonaEscogida.equalsIgnoreCase("miBatalla")) {
+
+            for (Carta carta : cartasTablero) {
+                if (carta instanceof Animal) {
+                    Animal animal = (Animal) carta;
+                    if (animal.isEnLineaDeBatalla()) {
+                        auxiliar.add(animal);
+                    }
+                }
+            }
+
+        } else if (zonaEscogida.equalsIgnoreCase("miCementerio")) {
+
+            for (Carta carta : cartasTablero) {
+                if (carta.isEnCementerio()) {
+                    auxiliar.add(carta);
+                }
+            }
+
+        }
+
+        if (auxiliar.size() == 0) {
+            JOptionPane.showMessageDialog(null,
+                    "Actualmente " + jugadorActual.getnombreUsuario() + " no tienes cartas en esta zona",
+                    "Sin cartas en esta zona", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            Inspector.inspeccionarMultiplesCartasPorZona(auxiliar);
+            auxiliar.clear();
+        }
+
+    }
+
+    public void inspeccionarTableroEnemigo(Jugador jugadorEnemigo, String zonaEscogida) {
+
+        List<Carta> auxiliar = new ArrayList<Carta>();
+
+        if (zonaEscogida.equalsIgnoreCase("reposoEnemigo")) {
+
+            for (Carta carta : jugadorEnemigo.getCartasTablero()) {
+                if (carta instanceof Animal) {
+                    Animal animal = (Animal) carta;
+                    if (animal.isEnLineaDeReposo()) {
+                        auxiliar.add(carta);
+                    }
+                }
+            }
+
+            auxiliar.clear();
+
+        } else if (zonaEscogida.equalsIgnoreCase("batallaEnemiga")) {
+
+            for (Carta carta : jugadorEnemigo.getCartasTablero()) {
+                if (carta instanceof Animal) {
+                    Animal animal = (Animal) carta;
+                    if (animal.isEnLineaDeBatalla()) {
+                        auxiliar.add(carta);
+                    }
+                }
+            }
+
+        } else if (zonaEscogida.equalsIgnoreCase("cementerioEnemigo")) {
+
+            for (Carta carta : jugadorEnemigo.getCartasTablero()) {
+                if (carta.isEnCementerio()) {
+                    auxiliar.add(carta);
+                }
+            }
+        }
+        if (auxiliar.size() == 0) {
+            JOptionPane.showMessageDialog(null,
+                    "Actualmente " + jugadorEnemigo.getnombreUsuario() + " no tiene cartas en esta zona",
+                    "Sin cartas en esta zona", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            Inspector.inspeccionarMultiplesCartasPorZona(auxiliar);
             auxiliar.clear();
         }
 
@@ -486,52 +611,43 @@ public class CartaService {
         return alimentosBajadosAlTablero;
     }
 
-    public void reagruparAlimentos() {
+    public int pasarCartasCementerioMazo(int cartasAPasar) {
+
+        int cartasEnCementerio = 0;
 
         for (Carta carta : cartasTablero) {
-            if (carta instanceof Alimento) {
-                Alimento alimento = (Alimento) carta;
-                if (alimento.isAlimentoConsumido()) {
-                    alimento.setAlimentoConsumido(false);
-                    alimento.setEnReservaDeAlimentos(true);
-                }
+            if (carta.isEnCementerio()) {
+                cartasEnCementerio++;
             }
         }
 
-    }
+        List<Carta> auxiliar = new ArrayList<Carta>();
 
-    public void reagruparAnimalesEnZonaBatalla() {
+        if (cartasAPasar <= cartasEnCementerio) {
+            for (Carta carta : cartasTablero) {
+                if (carta.isEnCementerio()) {
+                    auxiliar.add(carta);
 
-        for (Carta carta : cartasTablero) {
-            if (carta instanceof Animal) {
-                Animal animal = (Animal) carta;
-                if (animal.isEnLineaDeBatalla()) {
-                    animal.setEnLineaDeBatalla(false);
-                    animal.setEnLineaDeReposo(true);
+                }
+            }
+
+        } else {
+            for (Carta carta : cartasTablero) {
+                if (cartasEnCementerio > 0) {
+                    if (carta.isEnCementerio()) {
+                        cartasEnCementerio--;
+                        auxiliar.add(carta);
+                    }
                 }
 
             }
         }
-    }
 
-    public int devolverCantidadAlimentosEnReserva() {
+        cartasTablero.removeAll(auxiliar);
+        cartasMazo.addAll(auxiliar);
 
-        List<Carta> alimentos = new ArrayList<Carta>();
+        return auxiliar.size();
 
-        cartasTablero.stream()
-                .filter((carta) -> carta instanceof Alimento && ((Alimento) carta).isEnReservaDeAlimentos())
-                .forEach((carta) -> alimentos.add(carta));
-
-        return alimentos.size();
-    }
-
-    public int devolverCantidadAnimalesEnReposo() {
-        List<Carta> animalesEnReposo = new ArrayList<Carta>();
-
-        cartasTablero.stream().filter((carta) -> carta instanceof Animal && ((Animal) carta).isEnLineaDeReposo())
-                .forEach((carta) -> animalesEnReposo.add(carta));
-
-        return animalesEnReposo.size();
     }
 
     public Carta seleccionarAnimalAtacanteEnReposo() {
@@ -692,15 +808,6 @@ public class CartaService {
         auxiliar.clear();
     }
 
-    private boolean tieneCartasElMazo() {
-        if (cartasMazo.size() == 0) {
-            return false;
-        } else {
-            return true;
-        }
-
-    }
-
     public void verCantidadAlimentosConsumidos() {
         List<Carta> auxiliar = new ArrayList<Carta>();
 
@@ -769,101 +876,24 @@ public class CartaService {
         Inspector.inspeccionarMultiplesCartasPorZona(auxiliar);
     }
 
-    public void inspeccionarZonaJuego(Jugador jugadorActual, String zonaEscogida) {
+    public int devolverCantidadAlimentosEnReserva() {
 
-        List<Carta> auxiliar = new ArrayList<Carta>();
+        List<Carta> alimentos = new ArrayList<Carta>();
 
-        if (zonaEscogida.equalsIgnoreCase("cartasMano")) {
-            auxiliar.addAll(cartasEnMano);
+        cartasTablero.stream()
+                .filter((carta) -> carta instanceof Alimento && ((Alimento) carta).isEnReservaDeAlimentos())
+                .forEach((carta) -> alimentos.add(carta));
 
-        } else if (zonaEscogida.equalsIgnoreCase("miReposo")) {
-
-            for (Carta carta : cartasTablero) {
-                if (carta instanceof Animal) {
-                    Animal animal = (Animal) carta;
-                    if (animal.isEnLineaDeReposo()) {
-                        auxiliar.add(animal);
-                    }
-                }
-            }
-
-        } else if (zonaEscogida.equalsIgnoreCase("miBatalla")) {
-
-            for (Carta carta : cartasTablero) {
-                if (carta instanceof Animal) {
-                    Animal animal = (Animal) carta;
-                    if (animal.isEnLineaDeBatalla()) {
-                        auxiliar.add(animal);
-                    }
-                }
-            }
-
-        } else if (zonaEscogida.equalsIgnoreCase("miCementerio")) {
-
-            for (Carta carta : cartasTablero) {
-                if (carta.isEnCementerio()) {
-                    auxiliar.add(carta);
-                }
-            }
-
-        }
-
-        if (auxiliar.size() == 0) {
-            JOptionPane.showMessageDialog(null,
-                    "Actualmente " + jugadorActual.getnombreUsuario() + " no tienes cartas en esta zona",
-                    "Sin cartas en esta zona", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            Inspector.inspeccionarMultiplesCartasPorZona(auxiliar);
-            auxiliar.clear();
-        }
-
+        return alimentos.size();
     }
 
-    public void inspeccionarTableroEnemigo(Jugador jugadorEnemigo, String zonaEscogida) {
+    public int devolverCantidadAnimalesEnReposo() {
+        List<Carta> animalesEnReposo = new ArrayList<Carta>();
 
-        List<Carta> auxiliar = new ArrayList<Carta>();
+        cartasTablero.stream().filter((carta) -> carta instanceof Animal && ((Animal) carta).isEnLineaDeReposo())
+                .forEach((carta) -> animalesEnReposo.add(carta));
 
-        if (zonaEscogida.equalsIgnoreCase("reposoEnemigo")) {
-
-            for (Carta carta : jugadorEnemigo.getCartasTablero()) {
-                if (carta instanceof Animal) {
-                    Animal animal = (Animal) carta;
-                    if (animal.isEnLineaDeReposo()) {
-                        auxiliar.add(carta);
-                    }
-                }
-            }
-
-            auxiliar.clear();
-
-        } else if (zonaEscogida.equalsIgnoreCase("batallaEnemiga")) {
-
-            for (Carta carta : jugadorEnemigo.getCartasTablero()) {
-                if (carta instanceof Animal) {
-                    Animal animal = (Animal) carta;
-                    if (animal.isEnLineaDeBatalla()) {
-                        auxiliar.add(carta);
-                    }
-                }
-            }
-
-        } else if (zonaEscogida.equalsIgnoreCase("cementerioEnemigo")) {
-
-            for (Carta carta : jugadorEnemigo.getCartasTablero()) {
-                if (carta.isEnCementerio()) {
-                    auxiliar.add(carta);
-                }
-            }
-        }
-        if (auxiliar.size() == 0) {
-            JOptionPane.showMessageDialog(null,
-                    "Actualmente " + jugadorEnemigo.getnombreUsuario() + " no tiene cartas en esta zona",
-                    "Sin cartas en esta zona", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            Inspector.inspeccionarMultiplesCartasPorZona(auxiliar);
-            auxiliar.clear();
-        }
-
+        return animalesEnReposo.size();
     }
 
     public void regresarTodasLasCartasAlMazoYBarajar() {
@@ -885,4 +915,14 @@ public class CartaService {
 
         mezclarMazo();
     }
+
+    private boolean tieneCartasElMazo() {
+        if (cartasMazo.size() == 0) {
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
 }

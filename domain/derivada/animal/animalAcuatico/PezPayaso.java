@@ -26,7 +26,7 @@ public class PezPayaso extends Animal {
         sePuedeBajarAlTablero = false;
         enLineaDeReposo = false;
         enLineaDeBatalla = false;
-        enCementerio=false;
+        enCementerio = false;
     }
 
     public int getId() {
@@ -61,18 +61,6 @@ public class PezPayaso extends Animal {
         return dano;
     }
 
-    @Override
-    public void atacar() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void defender() {
-        // TODO Auto-generated method stub
-
-    }
-
     public boolean isSePuedeBajarAlTablero() {
         return sePuedeBajarAlTablero;
     }
@@ -97,11 +85,11 @@ public class PezPayaso extends Animal {
         this.enLineaDeBatalla = enLineaDeBatalla;
     }
 
-    public boolean isEnCementerio(){
+    public boolean isEnCementerio() {
         return enCementerio;
     }
 
-    public  void setEnCementerio(boolean enCementerio){
+    public void setEnCementerio(boolean enCementerio) {
         this.enCementerio = enCementerio;
     }
 }

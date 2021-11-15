@@ -301,7 +301,7 @@ public class Game {
 
                                 } else if (opcionElegida == 1) {
 
-                                        int animalesReposoAtacante = jugadorActual.verCantidadAnimalesEnReposo();
+                                        int animalesReposoAtacante = jugadorActual.devolverCantidadAnimalesEnReposo();
 
                                         if (animalesReposoAtacante <= 0) {
                                                 JOptionPane.showMessageDialog(null, jugadorActual.getnombreUsuario()
@@ -329,7 +329,7 @@ public class Game {
                                                 if (decisionDefensa == 0) {
 
                                                         int cantidadAnimalesEnReposoDefensa = jugadorEnemigo
-                                                                        .verCantidadAnimalesEnReposo();
+                                                                        .devolverCantidadAnimalesEnReposo();
 
                                                         if (cantidadAnimalesEnReposoDefensa <= 0) {
                                                                 JOptionPane.showMessageDialog(null, jugadorEnemigo

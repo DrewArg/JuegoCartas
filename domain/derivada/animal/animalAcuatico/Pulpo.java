@@ -1,6 +1,9 @@
 package domain.derivada.animal.animalAcuatico;
 
+import javax.swing.JOptionPane;
+
 import domain.base.Animal;
+import domain.derivada.Jugador;
 
 public class Pulpo extends Animal {
     private int id;
@@ -19,14 +22,14 @@ public class Pulpo extends Animal {
         this.id = id;
         tipo = "Animal";
         nombre = "Pulpo";
-        efecto = "Puede perder X puntos de daño para devolver X cartas del cementerio al mazo.";
+        efecto = "Puede perder X puntos de daño permanentemente para devolver X cartas del cementerio al mazo.";
         coste = 4;
         dano = 3;
 
         sePuedeBajarAlTablero = false;
         enLineaDeReposo = false;
         enLineaDeBatalla = false;
-        enCementerio=false;
+        enCementerio = false;
     }
 
     public int getId() {
@@ -61,19 +64,23 @@ public class Pulpo extends Animal {
         this.dano = dano;
     }
 
-    public void activarEfecto() {
+    public void activarEfecto(Jugador jugadorActual) {
+        int puntosPerdidos = Integer.parseInt(JOptionPane.showInputDialog(null,
+                "¿Cuántos puntos de daño quieres que el animal pierda?", nombre, JOptionPane.QUESTION_MESSAGE));
 
-    }
+        if (puntosPerdidos > getDano()) {
+            JOptionPane.showMessageDialog(null,
+                    nombre + " no puede perder más puntos de daño de los que tiene actualmente.");
+            activarEfecto(jugadorActual);
+        } else {
+            int cartasRecuperadas = jugadorActual.pasarCartasCementerioMazo(puntosPerdidos);
 
-    @Override
-    public void atacar() {
-        // TODO Auto-generated method stub
+            JOptionPane.showMessageDialog(null,
+                    nombre + " ha perdido " + puntosPerdidos + " puntos de daño permanentemente.\nHas recuperado "
+                            + cartasRecuperadas + " cartas de tu cementerio y las has puesto en tu mazo.");
 
-    }
-
-    @Override
-    public void defender() {
-        // TODO Auto-generated method stub
+            setDano(getDano() - puntosPerdidos);
+        }
 
     }
 
@@ -101,11 +108,11 @@ public class Pulpo extends Animal {
         this.enLineaDeBatalla = enLineaDeBatalla;
     }
 
-    public boolean isEnCementerio(){
+    public boolean isEnCementerio() {
         return enCementerio;
     }
 
-    public  void setEnCementerio(boolean enCementerio){
+    public void setEnCementerio(boolean enCementerio) {
         this.enCementerio = enCementerio;
     }
 }

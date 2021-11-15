@@ -2,10 +2,6 @@ package domain.base;
 
 public abstract class Animal implements Carta {
 
-    protected abstract void atacar();
-
-    protected abstract void defender();
-
     public abstract String getNombre();
 
     public abstract String getTipo();

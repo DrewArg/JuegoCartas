@@ -62,18 +62,6 @@ public class Rata extends Animal {
         return dano;
     }
 
-    @Override
-    public void atacar() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void defender() {
-        // TODO Auto-generated method stub
-
-    }
-
     public boolean isSePuedeBajarAlTablero() {
         return sePuedeBajarAlTablero;
     }

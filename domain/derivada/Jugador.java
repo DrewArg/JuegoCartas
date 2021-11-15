@@ -41,10 +41,6 @@ public class Jugador {
         return turno;
     }
 
-    public void setTurno(int turno) {
-        this.turno = turno;
-    }
-
     public int getCantidadCartasMazo() {
         return cartaService.getCantidadCartasMazo();
     }
@@ -57,26 +53,12 @@ public class Jugador {
         return cartaService.getCartasTablero();
     }
 
+    public void setTurno(int turno) {
+        this.turno = turno;
+    }
+
     public void setAlimentosBajadosAlTablero(int alimentosBajadosAlTablero) {
         this.alimentosBajadosAlTablero = alimentosBajadosAlTablero;
-    }
-
-    public void robarCarta() {
-        JOptionPane.showMessageDialog(null, nombreUsuario + " has robado una carta del mazo.", nombreUsuario, 1);
-        cartaService.robarCarta();
-
-    }
-
-    public int calcularDañoCombate(Carta cartaAtacante, Carta cartaDefensora) {
-        return cartaService.calcularDañoCombate(cartaAtacante, cartaDefensora);
-    }
-
-    public Carta seleccionarAnimalDefensor() {
-        return cartaService.seleccionarAnimalDefensorEnReposo();
-    }
-
-    public Carta seleccionarAnimalAtacante() {
-        return cartaService.seleccionarAnimalAtacanteEnReposo();
     }
 
     public void reagruparAlimentos() {
@@ -87,8 +69,52 @@ public class Jugador {
         cartaService.reagruparAnimalesEnZonaBatalla();
     }
 
-    public int verCantidadAnimalesEnReposo() {
+    public int bajarCartaAlTablero(int alimentosBajadosAlTablero) {
+        return cartaService.bajarCartaAlTablero(alimentosBajadosAlTablero);
+    }
+
+    public void robarManoInicialCartas() {
+        cartaService.robarManoInicialCartas();
+    }
+
+    public void robarMultiplesCartas(int cantidadCartasARobar) {
+        JOptionPane.showMessageDialog(null,
+                nombreUsuario + " has robado una " + cantidadCartasARobar + " cartas del mazo.", nombreUsuario, 1);
+        cartaService.robarMultiplesCartas(cantidadCartasARobar);
+    }
+
+    public void robarCarta() {
+        JOptionPane.showMessageDialog(null, nombreUsuario + " has robado una carta del mazo.", nombreUsuario, 1);
+        cartaService.robarCarta();
+
+    }
+
+    public void inspeccionarZonaJuego(Jugador jugadorActual, String zonaEscogida) {
+        cartaService.inspeccionarZonaJuego(jugadorActual, zonaEscogida);
+    }
+
+    public void inspeccionarTableroEnemigo(Jugador jugadorEnemigo, String zonaEscogida) {
+        cartaService.inspeccionarTableroEnemigo(jugadorEnemigo, zonaEscogida);
+    }
+
+    public int pasarCartasCementerioMazo(int cartasAPasar) {
+        return cartaService.pasarCartasCementerioMazo(cartasAPasar);
+    }
+
+    public int devolverCantidadAnimalesEnReposo() {
         return cartaService.devolverCantidadAnimalesEnReposo();
+    }
+
+    public Carta seleccionarAnimalDefensor() {
+        return cartaService.seleccionarAnimalDefensorEnReposo();
+    }
+
+    public Carta seleccionarAnimalAtacante() {
+        return cartaService.seleccionarAnimalAtacanteEnReposo();
+    }
+
+    public int calcularDañoCombate(Carta cartaAtacante, Carta cartaDefensora) {
+        return cartaService.calcularDañoCombate(cartaAtacante, cartaDefensora);
     }
 
     public int botarCartasMazo(Carta cartaAtacante) {
@@ -99,18 +125,9 @@ public class Jugador {
         cartaService.botarCartasMazo(dañoRecibido);
     }
 
-    public void robarMultiplesCartas(int cantidadCartasARobar) {
-        JOptionPane.showMessageDialog(null,
-                nombreUsuario + " has robado una " + cantidadCartasARobar + " cartas del mazo.", nombreUsuario, 1);
-        cartaService.robarMultiplesCartas(cantidadCartasARobar);
-    }
-
-    public void robarManoInicialCartas() {
-        cartaService.robarManoInicialCartas();
-    }
-
-    public int bajarCartaAlTablero(int alimentosBajadosAlTablero) {
-        return cartaService.bajarCartaAlTablero(alimentosBajadosAlTablero);
+    public void regresarTodasLasCartasAlMazoYBarajar() {
+        setTurno(1);
+        cartaService.regresarTodasLasCartasAlMazoYBarajar();
     }
 
     private void seleccionarTipoMazo() {
@@ -121,35 +138,6 @@ public class Jugador {
 
         cartaService.llenarMazoCartas(mazoSeleccionado);
 
-    }
-
-    public void verAnimalesBatalla() {
-        cartaService.verCantidadAnimalesBatalla();
-    }
-
-    public void verAnimalesReposo() {
-        cartaService.verCantidadAnimalesReposo();
-    }
-
-    public void verAlimentosConsumidos() {
-        cartaService.verCantidadAlimentosConsumidos();
-    }
-
-    public void verAlimentosDisponibles() {
-        cartaService.verCantidadAlimentosDisponibles();
-    }
-
-    public void regresarTodasLasCartasAlMazoYBarajar() {
-        setTurno(1);
-        cartaService.regresarTodasLasCartasAlMazoYBarajar();
-    }
-
-    public void inspeccionarZonaJuego(Jugador jugadorActual, String zonaEscogida) {
-        cartaService.inspeccionarZonaJuego(jugadorActual, zonaEscogida);
-    }
-
-    public void inspeccionarTableroEnemigo(Jugador jugadorEnemigo, String zonaEscogida) {
-        cartaService.inspeccionarTableroEnemigo(jugadorEnemigo, zonaEscogida);
     }
 
 }

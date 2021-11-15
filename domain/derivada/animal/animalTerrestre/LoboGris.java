@@ -26,7 +26,7 @@ public class LoboGris extends Animal {
         sePuedeBajarAlTablero = false;
         enLineaDeReposo = false;
         enLineaDeBatalla = false;
-        enCementerio=false;
+        enCementerio = false;
     }
 
     public int getId() {
@@ -65,18 +65,6 @@ public class LoboGris extends Animal {
 
     }
 
-    @Override
-    public void atacar() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void defender() {
-        // TODO Auto-generated method stub
-
-    }
-
     public boolean isSePuedeBajarAlTablero() {
         return sePuedeBajarAlTablero;
     }
@@ -101,11 +89,11 @@ public class LoboGris extends Animal {
         this.enLineaDeBatalla = enLineaDeBatalla;
     }
 
-    public boolean isEnCementerio(){
+    public boolean isEnCementerio() {
         return enCementerio;
     }
 
-    public  void setEnCementerio(boolean enCementerio){
+    public void setEnCementerio(boolean enCementerio) {
         this.enCementerio = enCementerio;
     }
 
