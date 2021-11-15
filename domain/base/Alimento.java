@@ -7,12 +7,14 @@ public class Alimento implements Carta {
     private boolean sePuedeBajarAlTablero;
     private boolean enReservaDeAlimentos;
     private boolean alimentoConsumido;
+    private boolean enCementerio;
 
     public Alimento(int id) {
         this.id = id;
         sePuedeBajarAlTablero = false;
         enReservaDeAlimentos = false;
         alimentoConsumido = false;
+        enCementerio = false;
     }
 
     public int getId() {
@@ -45,5 +47,13 @@ public class Alimento implements Carta {
 
     public void setAlimentoConsumido(boolean alimentoConsumido) {
         this.alimentoConsumido = alimentoConsumido;
+    }
+
+    public boolean isEnCementerio() {
+        return enCementerio;
+    }
+
+    public void setEnCementerio(boolean enCementerio) {
+        this.enCementerio = enCementerio;
     }
 }

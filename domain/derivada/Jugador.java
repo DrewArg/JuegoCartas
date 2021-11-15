@@ -1,5 +1,7 @@
 package domain.derivada;
 
+import java.util.List;
+
 import javax.swing.JOptionPane;
 
 import domain.base.Carta;
@@ -49,6 +51,10 @@ public class Jugador {
 
     public int getAlimentosBajadosAlTablero() {
         return alimentosBajadosAlTablero;
+    }
+
+    public List<Carta> getCartasTablero() {
+        return cartaService.getCartasTablero();
     }
 
     public void setAlimentosBajadosAlTablero(int alimentosBajadosAlTablero) {
@@ -133,8 +139,17 @@ public class Jugador {
         cartaService.verCantidadAlimentosDisponibles();
     }
 
-    public void regresarTodasLasCartasAlMazoYBarajar(){
+    public void regresarTodasLasCartasAlMazoYBarajar() {
+        setTurno(1);
         cartaService.regresarTodasLasCartasAlMazoYBarajar();
+    }
+
+    public void inspeccionarZonaJuego(Jugador jugadorActual, String zonaEscogida) {
+        cartaService.inspeccionarZonaJuego(jugadorActual, zonaEscogida);
+    }
+
+    public void inspeccionarTableroEnemigo(Jugador jugadorEnemigo, String zonaEscogida) {
+        cartaService.inspeccionarTableroEnemigo(jugadorEnemigo, zonaEscogida);
     }
 
 }

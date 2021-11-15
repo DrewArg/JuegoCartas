@@ -12,6 +12,7 @@ public class Camuflaje extends Habilidad {
     private int coste;
 
     private boolean sePuedeBajarAlTablero;
+    private boolean enCementerio;
 
     public Camuflaje(int id) {
         this.id = id;
@@ -21,6 +22,7 @@ public class Camuflaje extends Habilidad {
         coste = 3;
 
         sePuedeBajarAlTablero = false;
+        enCementerio =false;
     }
 
     @Override
@@ -65,5 +67,13 @@ public class Camuflaje extends Habilidad {
 
     public void setSePuedeBajarAlTablero(boolean sePuedeBajarAlTablero) {
         this.sePuedeBajarAlTablero = sePuedeBajarAlTablero;
+    }
+
+    public void setEnCementerio(boolean enCementerio){
+        this.enCementerio=enCementerio;
+    }
+
+    public boolean isEnCementerio(){
+        return enCementerio;
     }
 }

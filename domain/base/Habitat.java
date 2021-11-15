@@ -17,5 +17,8 @@ public abstract class Habitat implements Carta {
 
     public abstract void setEnLineaApoyo(boolean enLineaApoyo);
 
+    public abstract boolean isEnCementerio();
+
+    public abstract void setEnCementerio(boolean enCementerio);
 
 }

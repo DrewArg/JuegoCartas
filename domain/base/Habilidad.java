@@ -14,4 +14,8 @@ public abstract class Habilidad implements Carta {
 
     public abstract void activarEfecto();
 
+    public abstract boolean isEnCementerio();
+
+    public abstract void setEnCementerio(boolean enCementerio);
+
 }

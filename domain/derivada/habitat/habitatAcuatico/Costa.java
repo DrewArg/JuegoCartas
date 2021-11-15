@@ -11,6 +11,7 @@ public class Costa extends Habitat {
 
     private boolean sePuedeBajarAlTablero;
     private boolean enLineaApoyo;
+    private boolean enCementerio;
 
     public Costa(int id) {
         this.id = id;
@@ -21,6 +22,7 @@ public class Costa extends Habitat {
 
         sePuedeBajarAlTablero = false;
         enLineaApoyo = false;
+        enCementerio =false;
     }
 
     @Override
@@ -73,5 +75,13 @@ public class Costa extends Habitat {
 
     public void setEnLineaApoyo(boolean enLineaApoyo) {
         this.enLineaApoyo = enLineaApoyo;
+    }
+
+    public void setEnCementerio(boolean enCementerio){
+        this.enCementerio=enCementerio;
+    }
+
+    public boolean isEnCementerio(){
+        return enCementerio;
     }
 }

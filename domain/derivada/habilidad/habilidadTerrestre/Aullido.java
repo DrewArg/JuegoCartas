@@ -12,6 +12,7 @@ public class Aullido extends Habilidad {
     private int coste;
 
     private boolean sePuedeBajarAlTablero;
+    private boolean enCementerio;
 
     public Aullido(int id) {
         this.id = id;
@@ -21,6 +22,7 @@ public class Aullido extends Habilidad {
         coste = 2;
 
         sePuedeBajarAlTablero = false;
+        enCementerio =false;
     }
 
     @Override
@@ -65,6 +67,14 @@ public class Aullido extends Habilidad {
 
     public void setSePuedeBajarAlTablero(boolean sePuedeBajarAlTablero) {
         this.sePuedeBajarAlTablero = sePuedeBajarAlTablero;
+    }
+
+    public void setEnCementerio(boolean enCementerio){
+        this.enCementerio=enCementerio;
+    }
+
+    public boolean isEnCementerio(){
+        return enCementerio;
     }
 
 }

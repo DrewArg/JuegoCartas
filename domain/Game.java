@@ -286,14 +286,15 @@ public class Game {
                         jugadorActual.reagruparAnimalesEnZonaBatalla();
                         jugadorActual.setAlimentosBajadosAlTablero(0);
 
-                        String[] opcionesTurno = { "Bajar una carta", "Atacar", "Activar un efecto", "Pasar" };
+                        String[] opcionesTurno = { "Bajar una carta", "Atacar", "Activar un efecto",
+                                        "Inspeccionar Zona de Juego", "Pasar" };
                         int opcionElegida = JOptionPane.showOptionDialog(null,
                                         "Turno " + jugadorActual.getTurno() + ". ¿" + jugadorActual.getnombreUsuario()
                                                         + " que deseas hacer?",
                                         "Turno: " + jugadorActual.getTurno(), JOptionPane.DEFAULT_OPTION,
                                         JOptionPane.QUESTION_MESSAGE, null, opcionesTurno, 2);
 
-                        while (opcionElegida != 3) {
+                        while (opcionElegida != 4) {
                                 if (opcionElegida == 0) {
                                         jugadorActual.setAlimentosBajadosAlTablero(jugadorActual.bajarCartaAlTablero(
                                                         jugadorActual.getAlimentosBajadosAlTablero()));
@@ -414,6 +415,79 @@ public class Game {
                                         JOptionPane.showMessageDialog(null, "Aún no codeado", "Aun no codeado",
                                                         JOptionPane.ERROR_MESSAGE);
 
+                                } else if (opcionElegida == 3) {
+                                        String[] zonasJuego = { "Mi mano", "Mi Tablero", "Tablero enemigo" };
+
+                                        int zonaElegida = JOptionPane.showOptionDialog(null,
+                                                        "¿Qué zona de juego quieres inspeccionar?", "Zonas de Juego",
+                                                        JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+                                                        zonasJuego, 1);
+
+                                        switch (zonaElegida) {
+                                        case 0:
+                                                jugadorActual.inspeccionarZonaJuego(jugadorActual, "cartasMano");
+                                                break;
+
+                                        case 1:
+                                                String[] zonasTableroAliado = { "Linea de Reposo", "Linea de Batalla",
+                                                                "Cementerio" };
+                                                int zonaTableroAliadoElegida = JOptionPane.showOptionDialog(null,
+                                                                "¿Qué parte de tu tablero quieres inspeccionar?",
+                                                                "Tablero", JOptionPane.DEFAULT_OPTION,
+                                                                JOptionPane.QUESTION_MESSAGE, null, zonasTableroAliado,
+                                                                0);
+
+                                                switch (zonaTableroAliadoElegida) {
+                                                case 0:
+                                                        jugadorActual.inspeccionarZonaJuego(jugadorActual, "miReposo");
+                                                        break;
+
+                                                case 1:
+                                                        jugadorActual.inspeccionarZonaJuego(jugadorActual, "miBatalla");
+                                                        break;
+
+                                                case 2:
+                                                        jugadorActual.inspeccionarZonaJuego(jugadorActual,
+                                                                        "miCementerio");
+                                                        break;
+
+                                                default:
+                                                        break;
+                                                }
+                                                break;
+
+                                        case 2:
+                                                String[] zonasTableroEnemigo = { "Linea de Reposo", "Linea de Batalla",
+                                                                "Cementerio" };
+                                                int zonaTableroEnemigoElegida = JOptionPane.showOptionDialog(null,
+                                                                "¿Qué parte del tablero enemigo quieres inspeccionar?",
+                                                                "Tablero", JOptionPane.DEFAULT_OPTION,
+                                                                JOptionPane.QUESTION_MESSAGE, null, zonasTableroEnemigo,
+                                                                0);
+
+                                                switch (zonaTableroEnemigoElegida) {
+                                                case 0:
+                                                        jugadorActual.inspeccionarTableroEnemigo(jugadorEnemigo,
+                                                                        "reposoEnemigo");
+                                                        break;
+
+                                                case 1:
+                                                        jugadorActual.inspeccionarTableroEnemigo(jugadorEnemigo,
+                                                                        "batallaEnemiga");
+                                                        break;
+
+                                                case 2:
+                                                        jugadorActual.inspeccionarTableroEnemigo(jugadorEnemigo,
+                                                                        "cementerioEnemigo");
+                                                        break;
+
+                                                default:
+                                                        break;
+                                                }
+                                                break;
+                                        default:
+                                                break;
+                                        }
                                 }
 
                                 opcionElegida = JOptionPane.showOptionDialog(null, "Turno " + jugadorActual.getTurno()

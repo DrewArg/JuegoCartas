@@ -10,6 +10,7 @@ public class Captura extends Habilidad {
     private String tipo;
     private String efecto;
     private int coste;
+    private boolean enCementerio;
 
     private boolean sePuedeBajarAlTablero;
 
@@ -21,7 +22,8 @@ public class Captura extends Habilidad {
         coste = 3;
 
         sePuedeBajarAlTablero = false;
-      
+        enCementerio =false;
+
     }
 
     @Override
@@ -50,7 +52,8 @@ public class Captura extends Habilidad {
 
     @Override
     public void activarEfecto() {
-     JOptionPane.showMessageDialog(null, "Has activado esta habilidad pero aun no está codeada", "Habilidad activa", 2);
+        JOptionPane.showMessageDialog(null, "Has activado esta habilidad pero aun no está codeada", "Habilidad activa",
+                2);
 
     }
 
@@ -66,5 +69,13 @@ public class Captura extends Habilidad {
 
     public void setSePuedeBajarAlTablero(boolean sePuedeBajarAlTablero) {
         this.sePuedeBajarAlTablero = sePuedeBajarAlTablero;
+    }
+
+    public void setEnCementerio(boolean enCementerio){
+        this.enCementerio=enCementerio;
+    }
+
+    public boolean isEnCementerio(){
+        return enCementerio;
     }
 }
