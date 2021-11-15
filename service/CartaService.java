@@ -756,4 +756,24 @@ public class CartaService {
         JOptionPane.showMessageDialog(null, "Animales en batalla: " + auxiliar.size());
         Inspector.inspeccionarMultiplesCartasPorZona(auxiliar);
     }
+
+    public void regresarTodasLasCartasAlMazoYBarajar() {
+        List<Carta> auxiliar = new ArrayList<Carta>();
+
+        for (Carta carta : cartasTablero) {
+            auxiliar.add(carta);
+        }
+
+        for (Carta carta : cartasEnMano) {
+            auxiliar.add(carta);
+        }
+
+        cartasMazo.addAll(auxiliar);
+        cartasEnMano.removeAll(auxiliar);
+        cartasTablero.removeAll(auxiliar);
+
+        auxiliar.clear();
+
+        mezclarMazo();
+    }
 }

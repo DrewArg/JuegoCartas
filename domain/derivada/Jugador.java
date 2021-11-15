@@ -133,4 +133,8 @@ public class Jugador {
         cartaService.verCantidadAlimentosDisponibles();
     }
 
+    public void regresarTodasLasCartasAlMazoYBarajar(){
+        cartaService.regresarTodasLasCartasAlMazoYBarajar();
+    }
+
 }

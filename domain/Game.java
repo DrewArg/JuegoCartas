@@ -203,7 +203,7 @@ public class Game {
         }
 
         private void iniciarPartida(Jugador jugador1, Jugador jugador2) {
-                resetearValores();
+                regresarTodasLasCartasAlMazoYBarajar(jugador1, jugador2);
 
                 JOptionPane.showMessageDialog(null,
                                 "Ambos jugadores arracan con 25 cartas en su mazo, el jugador/a que se quede sin cartas en su mazo, perderá.",
@@ -433,7 +433,8 @@ public class Game {
                 jugadorActual.setTurno(jugadorActual.getTurno() + 1);
         }
 
-        private void resetearValores(){
-                
+        private void regresarTodasLasCartasAlMazoYBarajar(Jugador jugador1, Jugador jugador2) {
+                jugador1.regresarTodasLasCartasAlMazoYBarajar();
+                jugador2.regresarTodasLasCartasAlMazoYBarajar();
         }
 }
