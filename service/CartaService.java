@@ -232,43 +232,67 @@ public class CartaService {
     public void robarManoInicialCartas() {
         int manoInicial = 4;
         List<Carta> auxiliar = new ArrayList<Carta>();
-        for (int i = 1; i <= manoInicial; i++) {
-            Carta ultimaCartaMazo = cartasMazo.get(cartasMazo.size() - i);
 
-            auxiliar.add(ultimaCartaMazo);
+        if (manoInicial >= getCantidadCartasMazo()) {
+            cartasMazo.clear();
+
+        } else {
+
+            for (int i = 1; i <= manoInicial; i++) {
+                if (tieneCartasElMazo()) {
+                    auxiliar.add(cartasMazo.get(cartasMazo.size() - i));
+                }
+            }
+
+            Inspector.inspeccionarMultiplesCartasPorZona(auxiliar);
+
+            cartasEnMano.addAll(auxiliar);
+            cartasMazo.removeAll(auxiliar);
+            auxiliar.clear();
+
         }
-
-        Inspector.inspeccionarMultiplesCartasPorZona(auxiliar);
-
-        cartasEnMano.addAll(auxiliar);
-        cartasMazo.removeAll(auxiliar);
-        auxiliar.clear();
 
     }
 
     public void robarCarta() {
-        Carta ultimaCartaMazo = cartasMazo.get(cartasMazo.size() - 1);
 
-        cartasEnMano.add(ultimaCartaMazo);
-        cartasMazo.remove(ultimaCartaMazo);
+        if (0 >= getCantidadCartasMazo()) {
+            cartasMazo.clear();
 
-        Inspector.inspeccionarCarta(ultimaCartaMazo);
+        } else {
+            if (tieneCartasElMazo()) {
+                Carta ultimaCartaMazo = cartasMazo.get(cartasMazo.size() - 1);
+
+                cartasEnMano.add(ultimaCartaMazo);
+                cartasMazo.remove(ultimaCartaMazo);
+
+                Inspector.inspeccionarCarta(ultimaCartaMazo);
+            }
+        }
 
     }
 
     public void robarMultiplesCartas(int cantidadCartas) {
+
         List<Carta> auxiliar = new ArrayList<Carta>();
-        for (int i = 1; i <= cantidadCartas; i++) {
-            Carta ultimaCartaMazo = cartasMazo.get(cartasMazo.size() - i);
 
-            auxiliar.add(ultimaCartaMazo);
+        if (cantidadCartas >= getCantidadCartasMazo()) {
+            cartasMazo.clear();
+
+        } else {
+
+            for (int i = 1; i <= cantidadCartas; i++) {
+                if (tieneCartasElMazo()) {
+                    auxiliar.add(cartasMazo.get(cartasMazo.size() - i));
+                }
+            }
+
+            Inspector.inspeccionarMultiplesCartasPorZona(auxiliar);
+
+            cartasEnMano.addAll(auxiliar);
+            cartasMazo.removeAll(auxiliar);
+            auxiliar.clear();
         }
-
-        Inspector.inspeccionarMultiplesCartasPorZona(auxiliar);
-
-        cartasEnMano.addAll(auxiliar);
-        cartasMazo.removeAll(auxiliar);
-        auxiliar.clear();
 
     }
 
@@ -605,7 +629,7 @@ public class CartaService {
             animalDefensor.setEnCementerio(true);
         }
 
-        return animalAtacante.getDano() - animalDefensor.getDano();
+        return Math.abs(animalAtacante.getDano() - animalDefensor.getDano());
     }
 
     public int botarCartasMazo(Carta cartaAtacante) {
@@ -616,11 +640,20 @@ public class CartaService {
 
         List<Carta> auxiliar = new ArrayList<Carta>();
 
-        for (int i = 1; i <= danoMazo; i++) {
-            auxiliar.add(cartasMazo.get(cartasMazo.size() - i));
+        if (danoMazo >= getCantidadCartasMazo()) {
+            cartasMazo.clear();
+
+        } else {
+
+            for (int i = 1; i <= danoMazo; i++) {
+                if (tieneCartasElMazo()) {
+                    auxiliar.add(cartasMazo.get(cartasMazo.size() - i));
+                }
+            }
+
+            cartasMazo.removeAll(auxiliar);
         }
 
-        cartasMazo.removeAll(auxiliar);
         auxiliar.clear();
 
         return animalAtacante.getDano();
@@ -630,12 +663,30 @@ public class CartaService {
 
         List<Carta> auxiliar = new ArrayList<Carta>();
 
-        for (int i = 1; i <= dañoRecibido; i++) {
-            auxiliar.add(cartasMazo.get(cartasMazo.size() - i));
+        if (dañoRecibido >= getCantidadCartasMazo()) {
+            cartasMazo.clear();
+
+        } else {
+
+            for (int i = 1; i <= dañoRecibido; i++) {
+                if (tieneCartasElMazo()) {
+                    auxiliar.add(cartasMazo.get(cartasMazo.size() - i));
+                }
+            }
+
+            cartasMazo.removeAll(auxiliar);
         }
 
-        cartasMazo.removeAll(auxiliar);
         auxiliar.clear();
+    }
+
+    private boolean tieneCartasElMazo() {
+        if (cartasMazo.size() == 0) {
+            return false;
+        } else {
+            return true;
+        }
+
     }
 
     public void verCantidadAlimentosConsumidos() {
