@@ -9,10 +9,12 @@ public class TiburonBlanco extends Animal {
     private String efecto;
     private int coste;
     private int dano;
+    private boolean enCementerio;
 
     private boolean sePuedeBajarAlTablero;
-    private boolean enLineaDefensiva;
-    
+    private boolean enLineaDeReposo;
+    private boolean enLineaDeBatalla;
+
     public TiburonBlanco(int id) {
         this.id = id;
         tipo = "Animal";
@@ -22,8 +24,9 @@ public class TiburonBlanco extends Animal {
         dano = 4;
 
         sePuedeBajarAlTablero = false;
-        enLineaDefensiva = false;
-
+        enLineaDeReposo = false;
+        enLineaDeBatalla = false;
+        enCementerio=false;
     }
 
     public int getId() {
@@ -81,11 +84,28 @@ public class TiburonBlanco extends Animal {
     public void setSePuedeBajarAlTablero(boolean sePuedeBajarAlTablero) {
         this.sePuedeBajarAlTablero = sePuedeBajarAlTablero;
     }
-    public boolean isEnLineaDefensiva() {
-        return enLineaDefensiva;
-    };
 
-    public void setEnLineaDefensiva(boolean enLineaDefensiva) {
-        this.enLineaDefensiva = enLineaDefensiva;
-    };
+    public boolean isEnLineaDeReposo() {
+        return enLineaDeReposo;
+    }
+
+    public void setEnLineaDeReposo(boolean enLineaDeReposo) {
+        this.enLineaDeReposo = enLineaDeReposo;
+    }
+
+    public boolean isEnLineaDeBatalla() {
+        return enLineaDeBatalla;
+    }
+
+    public void setEnLineaDeBatalla(boolean enLineaDeBatalla) {
+        this.enLineaDeBatalla = enLineaDeBatalla;
+    }
+
+    public boolean isEnCementerio(){
+        return enCementerio;
+    }
+
+    public  void setEnCementerio(boolean enCementerio){
+        this.enCementerio = enCementerio;
+    }
 }

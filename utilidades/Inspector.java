@@ -17,7 +17,9 @@ public class Inspector {
             Animal animal = (Animal) carta;
 
             JOptionPane.showMessageDialog(null,
-                    "[" + animal.getId() + "]\nTipo: " + animal.getTipo() + "\nNombre: " + animal.getNombre());
+                    "[" + animal.getId() + "]\nTipo: " + animal.getTipo() + "\nNombre: " + animal.getNombre()
+                            + "\nCoste: " + animal.getCoste() + "\nDaño: " + animal.getDano() + "\nEfecto: "
+                            + animal.getEfecto());
 
         } else if (carta instanceof Alimento) {
 
@@ -27,12 +29,13 @@ public class Inspector {
         } else if (carta instanceof Habilidad) {
             Habilidad habilidad = (Habilidad) carta;
             JOptionPane.showMessageDialog(null,
-                    "[" + habilidad.getId() + "]\nTipo: " + habilidad.getTipo() + "\nNombre: " + habilidad.getNombre());
+                    "[" + habilidad.getId() + "]\nTipo: " + habilidad.getTipo() + "\nNombre: " + habilidad.getNombre()
+                            + "\nCoste: " + habilidad.getCoste() + "\nEfecto: " + habilidad.getEfecto());
 
         } else if (carta instanceof Habitat) {
             Habitat habitat = (Habitat) carta;
-            JOptionPane.showMessageDialog(null,
-                    "[" + habitat.getId() + "]\nTipo: " + habitat.getTipo() + "\nNombre: " + habitat.getNombre());
+            JOptionPane.showMessageDialog(null, "[" + habitat.getId() + "]\nTipo: " + habitat.getTipo() + "\nNombre: "
+                    + habitat.getNombre() + "\nCoste: " + habitat.getCoste() + "\nEfecto: " + habitat.getEfecto());
 
         }
     }

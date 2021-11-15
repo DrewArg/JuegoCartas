@@ -18,8 +18,16 @@ public abstract class Animal implements Carta {
 
     public abstract int getDano();
 
-    public abstract boolean isEnLineaDefensiva();
+    public abstract boolean isEnLineaDeReposo();
 
-    public abstract void setEnLineaDefensiva(boolean enLineaDefensiva);
+    public abstract void setEnLineaDeReposo(boolean enLineaDeReposo);
+
+    public abstract boolean isEnLineaDeBatalla();
+
+    public abstract void setEnLineaDeBatalla(boolean enLineaDeBatalla);
+
+    public abstract boolean isEnCementerio();
+
+    public abstract void setEnCementerio(boolean enCementerio);
 
 }

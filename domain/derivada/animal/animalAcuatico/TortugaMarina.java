@@ -11,8 +11,10 @@ public class TortugaMarina extends Animal {
     private int dano;
 
     private boolean sePuedeBajarAlTablero;
-    private boolean enLineaDefensiva;
-    
+    private boolean enLineaDeReposo;
+    private boolean enLineaDeBatalla;
+    private boolean enCementerio;
+
     public TortugaMarina(int id) {
         this.id = id;
         tipo = "Animal";
@@ -22,8 +24,9 @@ public class TortugaMarina extends Animal {
         dano = 2;
 
         sePuedeBajarAlTablero = false;
-        enLineaDefensiva = false;
-
+        enLineaDeReposo = false;
+        enLineaDeBatalla = false;
+        enCementerio=false;
     }
 
     public int getId() {
@@ -82,11 +85,27 @@ public class TortugaMarina extends Animal {
         this.sePuedeBajarAlTablero = sePuedeBajarAlTablero;
     }
 
-    public boolean isEnLineaDefensiva() {
-        return enLineaDefensiva;
-    };
+    public boolean isEnLineaDeReposo() {
+        return enLineaDeReposo;
+    }
 
-    public void setEnLineaDefensiva(boolean enLineaDefensiva) {
-        this.enLineaDefensiva = enLineaDefensiva;
-    };
+    public void setEnLineaDeReposo(boolean enLineaDeReposo) {
+        this.enLineaDeReposo = enLineaDeReposo;
+    }
+
+    public boolean isEnLineaDeBatalla() {
+        return enLineaDeBatalla;
+    }
+
+    public void setEnLineaDeBatalla(boolean enLineaDeBatalla) {
+        this.enLineaDeBatalla = enLineaDeBatalla;
+    }
+
+    public boolean isEnCementerio(){
+        return enCementerio;
+    }
+
+    public  void setEnCementerio(boolean enCementerio){
+        this.enCementerio = enCementerio;
+    }
 }

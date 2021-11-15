@@ -11,6 +11,7 @@ import domain.base.Animal;
 import domain.base.Carta;
 import domain.base.Habilidad;
 import domain.base.Habitat;
+import domain.derivada.Jugador;
 import domain.derivada.animal.animalAcuatico.PezPayaso;
 import domain.derivada.animal.animalAcuatico.Pulpo;
 import domain.derivada.animal.animalAcuatico.TiburonBlanco;
@@ -269,7 +270,7 @@ public class CartaService {
     }
 
     public void bajarCartaAlTablero() {
-        int reservaAlimentos = contarAlimentosEnReserva();
+        int reservaAlimentos = devolverCantidadAlimentosEnReserva();
 
         List<Carta> removedorCartas = new ArrayList<Carta>();
 
@@ -344,7 +345,7 @@ public class CartaService {
                                 }
                             }
 
-                            animal.setEnLineaDefensiva(true);
+                            animal.setEnLineaDeReposo(true);
                             cartasTablero.add(animal);
                             removedorCartas.add(animal);
                             alimentoBajadoAlTablero = true;
@@ -436,10 +437,13 @@ public class CartaService {
                 bajarCartaAlTablero();
 
             }
-        } // sin cartas disponibles
+        } else {
+            JOptionPane.showMessageDialog(null, "Actualmente no tienes cartas disponibles para bajar al tablero",
+                    "Sin cartas disponibles", JOptionPane.WARNING_MESSAGE);
+        }
     }
 
-    public int contarAlimentosEnReserva() {
+    private int devolverCantidadAlimentosEnReserva() {
 
         List<Carta> alimentos = new ArrayList<Carta>();
 
@@ -450,4 +454,231 @@ public class CartaService {
         return alimentos.size();
     }
 
+    public int devolverCantidadAnimalesEnReposo() {
+        List<Carta> animalesEnReposo = new ArrayList<Carta>();
+
+        cartasTablero.stream().filter((carta) -> carta instanceof Animal && ((Animal) carta).isEnLineaDeReposo())
+                .forEach((carta) -> animalesEnReposo.add(carta));
+
+        return animalesEnReposo.size();
+    }
+
+    public void reagruparAlimentos() {
+        for (Carta carta : cartasTablero) {
+            if (cartasTablero instanceof Alimento) {
+                Alimento alimento = (Alimento) carta;
+
+                if (alimento.isAlimentoConsumido()) {
+                    alimento.setAlimentoConsumido(false);
+                    alimento.setEnReservaDeAlimentos(true);
+                }
+
+            }
+        }
+
+    }
+
+    public void reagruparAnimalesEnZonaBatalla() {
+        for (Carta carta : cartasTablero) {
+            if (cartasTablero instanceof Animal) {
+
+                Animal animal = (Animal) carta;
+                if (animal.isEnLineaDeBatalla()) {
+                    animal.setEnLineaDeBatalla(false);
+                    animal.setEnLineaDeReposo(true);
+                }
+
+            }
+        }
+    }
+
+    public Carta seleccionarAnimalAtacanteEnReposo() {
+        List<Carta> animalesEnReposo = new ArrayList<Carta>();
+
+        cartasTablero.stream().filter((carta) -> carta instanceof Animal && ((Animal) carta).isEnLineaDeReposo())
+                .forEach((carta) -> animalesEnReposo.add(carta));
+
+        JOptionPane.showMessageDialog(null, animalesEnReposo.size());
+        JOptionPane.showMessageDialog(null, "Escoge el animal para atacar", "Ataque", JOptionPane.QUESTION_MESSAGE);
+
+        Inspector.inspeccionarMultiplesCartasPorZona(animalesEnReposo);
+
+        boolean animalEncontrado = false;
+        int idAnimalEscogido = Integer.parseInt(JOptionPane.showInputDialog(null,
+                "Ingresa el ID del animal seleccionado para atacar", "[ID] del animal"));
+
+        while (!animalEncontrado) {
+            for (Carta animalAtacanteActual : animalesEnReposo) {
+                if (idAnimalEscogido == animalAtacanteActual.getId()) {
+                    Animal animalADevolver = (Animal) animalAtacanteActual;
+                    animalADevolver.setEnLineaDeReposo(false);
+                    animalADevolver.setEnLineaDeBatalla(true);
+                    animalEncontrado = true;
+
+                    return animalADevolver;
+                }
+            }
+        }
+
+        animalesEnReposo.clear();
+
+        return null;
+
+    }
+
+    public Carta seleccionarAnimalDefensorEnReposo() {
+        List<Carta> animalesEnReposo = new ArrayList<Carta>();
+
+        cartasTablero.stream().filter((carta) -> carta instanceof Animal && ((Animal) carta).isEnLineaDeReposo())
+                .forEach((carta) -> animalesEnReposo.add(carta));
+
+        boolean animalEncontrado = false;
+        int idAnimalEscogido = Integer.parseInt(JOptionPane.showInputDialog(null,
+                "Ingresa el ID del animal seleccionado para atacar", "[ID] del animal"));
+
+        Inspector.inspeccionarMultiplesCartasPorZona(animalesEnReposo);
+
+        while (!animalEncontrado) {
+            for (Carta animalDefensorActual : animalesEnReposo) {
+                if (idAnimalEscogido == animalDefensorActual.getId()) {
+
+                    Animal animalADevolver = (Animal) animalDefensorActual;
+                    animalADevolver.setEnLineaDeReposo(false);
+                    animalADevolver.setEnLineaDeBatalla(true);
+                    animalEncontrado = true;
+
+                    return animalADevolver;
+                }
+            }
+        }
+
+        animalesEnReposo.clear();
+
+        return null;
+    }
+
+    public int calcularDañoCombate(Carta cartaAtacante, Carta cartaDefensora) {
+        Animal animalAtacante = (Animal) cartaAtacante;
+        Animal animalDefensor = (Animal) cartaDefensora;
+
+        if (animalAtacante.getDano() == animalDefensor.getDano()) {
+            animalAtacante.setEnLineaDeBatalla(false);
+            animalAtacante.setEnCementerio(true);
+
+            animalDefensor.setEnLineaDeBatalla(false);
+            animalDefensor.setEnCementerio(true);
+
+        } else if (animalAtacante.getDano() < animalDefensor.getDano()) {
+            animalAtacante.setEnLineaDeBatalla(false);
+            animalAtacante.setEnCementerio(true);
+
+        } else if (animalAtacante.getDano() > animalDefensor.getDano()) {
+            animalDefensor.setEnLineaDeBatalla(false);
+            animalDefensor.setEnCementerio(true);
+        }
+
+        return animalAtacante.getDano() - animalDefensor.getDano();
+    }
+
+    public int getCantidadCartasMazo() {
+        return cartasMazo.size();
+    }
+
+    public int botarCartasMazo(Carta cartaAtacante) {
+
+        Animal animalAtacante = (Animal) cartaAtacante;
+
+        int danoMazo = animalAtacante.getDano();
+
+        List<Carta> auxiliar = new ArrayList<Carta>();
+
+        for (int i = 1; i <= danoMazo; i++) {
+            auxiliar.add(cartasMazo.get(cartasMazo.size() - i));
+        }
+
+        cartasMazo.removeAll(auxiliar);
+        auxiliar.clear();
+
+        return animalAtacante.getDano();
+    }
+
+    public void botarCartasMazo(int dañoRecibido) {
+
+        List<Carta> auxiliar = new ArrayList<Carta>();
+
+        for (int i = 1; i <= dañoRecibido; i++) {
+            auxiliar.add(cartasMazo.get(cartasMazo.size() - i));
+        }
+
+        cartasMazo.removeAll(auxiliar);
+        auxiliar.clear();
+    }
+
+    public void verAlimentosConsumidos() {
+        List<Carta> auxiliar = new ArrayList<Carta>();
+
+        for (Carta carta : cartasTablero) {
+            if (carta instanceof Alimento) {
+                Alimento alimento = (Alimento) carta;
+                if (alimento.isAlimentoConsumido()) {
+                    auxiliar.add(alimento);
+                }
+
+            }
+        }
+
+        JOptionPane.showMessageDialog(null, "Alimentos consumidos: " + auxiliar.size());
+        Inspector.inspeccionarMultiplesCartasPorZona(auxiliar);
+    }
+
+    public void verAlimentosDisponibles() {
+        List<Carta> auxiliar = new ArrayList<Carta>();
+
+        for (Carta carta : cartasTablero) {
+            if (carta instanceof Alimento) {
+                Alimento alimento = (Alimento) carta;
+                if (alimento.isEnReservaDeAlimentos()) {
+                    auxiliar.add(alimento);
+                }
+
+            }
+        }
+
+        JOptionPane.showMessageDialog(null, "Alimentos en reserva: " + auxiliar.size());
+        Inspector.inspeccionarMultiplesCartasPorZona(auxiliar);
+    }
+
+    public void verAnimalesReposo() {
+        List<Carta> auxiliar = new ArrayList<Carta>();
+
+        for (Carta carta : cartasTablero) {
+            if (carta instanceof Animal) {
+                Animal animal = (Animal) carta;
+                if (animal.isEnLineaDeReposo()) {
+                    auxiliar.add(animal);
+                }
+
+            }
+        }
+
+        JOptionPane.showMessageDialog(null, "Animales en reposo: " + auxiliar.size());
+        Inspector.inspeccionarMultiplesCartasPorZona(auxiliar);
+    }
+
+    public void verAnimalesBatalla() {
+        List<Carta> auxiliar = new ArrayList<Carta>();
+
+        for (Carta carta : cartasTablero) {
+            if (carta instanceof Animal) {
+                Animal animal = (Animal) carta;
+                if (animal.isEnLineaDeBatalla()) {
+                    auxiliar.add(animal);
+                }
+
+            }
+        }
+
+        JOptionPane.showMessageDialog(null, "Animales en batalla: " + auxiliar.size());
+        Inspector.inspeccionarMultiplesCartasPorZona(auxiliar);
+    }
 }
