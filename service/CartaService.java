@@ -11,7 +11,6 @@ import domain.base.Animal;
 import domain.base.Carta;
 import domain.base.Habilidad;
 import domain.base.Habitat;
-import domain.derivada.Jugador;
 import domain.derivada.animal.animalAcuatico.PezPayaso;
 import domain.derivada.animal.animalAcuatico.Pulpo;
 import domain.derivada.animal.animalAcuatico.TiburonBlanco;
@@ -37,6 +36,10 @@ public class CartaService {
     private List<Carta> cartasMazo = new ArrayList<Carta>();
     private List<Carta> cartasEnMano = new ArrayList<Carta>();
     private List<Carta> cartasTablero = new ArrayList<Carta>();
+
+    public int getCantidadCartasMazo() {
+        return cartasMazo.size();
+    }
 
     public void llenarMazoCartas(int mazoSeleccionado) {
 
@@ -226,22 +229,6 @@ public class CartaService {
         Collections.shuffle(cartasMazo);
     }
 
-    public void robarMultiplesCartas(int cantidadCartas) {
-        List<Carta> auxiliar = new ArrayList<Carta>();
-        for (int i = 1; i <= cantidadCartas; i++) {
-            Carta ultimaCartaMazo = cartasMazo.get(cartasMazo.size() - i);
-
-            auxiliar.add(ultimaCartaMazo);
-        }
-
-        Inspector.inspeccionarMultiplesCartasPorZona(auxiliar);
-
-        cartasEnMano.addAll(auxiliar);
-        cartasMazo.removeAll(auxiliar);
-        auxiliar.clear();
-
-    }
-
     public void robarManoInicialCartas() {
         int manoInicial = 4;
         List<Carta> auxiliar = new ArrayList<Carta>();
@@ -269,7 +256,24 @@ public class CartaService {
 
     }
 
-    public void bajarCartaAlTablero() {
+    public void robarMultiplesCartas(int cantidadCartas) {
+        List<Carta> auxiliar = new ArrayList<Carta>();
+        for (int i = 1; i <= cantidadCartas; i++) {
+            Carta ultimaCartaMazo = cartasMazo.get(cartasMazo.size() - i);
+
+            auxiliar.add(ultimaCartaMazo);
+        }
+
+        Inspector.inspeccionarMultiplesCartasPorZona(auxiliar);
+
+        cartasEnMano.addAll(auxiliar);
+        cartasMazo.removeAll(auxiliar);
+        auxiliar.clear();
+
+    }
+
+    public int bajarCartaAlTablero(int alimentosBajadosAlTablero) {
+
         int reservaAlimentos = devolverCantidadAlimentosEnReserva();
 
         List<Carta> removedorCartas = new ArrayList<Carta>();
@@ -285,8 +289,6 @@ public class CartaService {
                     cartasDisponiblesParaBajar.add(carta);
                 }
             }
-
-            boolean alimentoBajadoAlTablero = false;
 
             JOptionPane.showMessageDialog(null, "Actualmente tienes " + reservaAlimentos
                     + " alimentos en tu reserva. \n-Recuerda que sólo puedes bajar un alimento por turno y este debe ser bajado antes que cualquier otra carta.-",
@@ -306,14 +308,14 @@ public class CartaService {
                     if (carta instanceof Alimento) {
                         Alimento alimento = (Alimento) carta;
 
-                        if (!alimentoBajadoAlTablero) {
+                        if (alimentosBajadosAlTablero == 0) {
                             JOptionPane.showMessageDialog(null, "Has agregado un alimento a tu reserva.",
                                     "Reserva de alimentos", 1);
 
                             alimento.setEnReservaDeAlimentos(true);
                             cartasTablero.add(alimento);
                             removedorCartas.add(alimento);
-                            alimentoBajadoAlTablero = true;
+                            alimentosBajadosAlTablero++;
 
                         } else {
 
@@ -326,29 +328,33 @@ public class CartaService {
                         Animal animal = (Animal) carta;
 
                         if (reservaAlimentos >= animal.getCoste()) {
-                            JOptionPane.showMessageDialog(null, "Has agregado un animal a tu linea defensvia",
-                                    "Linea defensiva", 1);
+                            JOptionPane.showMessageDialog(null, "Has agregado un animal a tu linea de reposo",
+                                    "Linea de reposo", 1);
                             if (animal.getCoste() == 0) {
 
                             } else {
+
                                 int alimentosConsumidos = 0;
 
                                 for (Carta carta2 : cartasTablero) {
-                                    Alimento alimentoDisponible = (Alimento) carta2;
-                                    if (alimentoDisponible.isEnReservaDeAlimentos()) {
-                                        if (alimentosConsumidos < animal.getCoste()) {
-                                            alimentoDisponible.setAlimentoConsumido(true);
-                                            alimentoDisponible.setEnReservaDeAlimentos(false);
-                                            alimentosConsumidos++;
+                                    if (carta2 instanceof Alimento) {
+                                        Alimento alimentoDisponible = (Alimento) carta2;
+                                        if (alimentoDisponible.isEnReservaDeAlimentos()) {
+                                            if (alimentosConsumidos < animal.getCoste()) {
+                                                alimentoDisponible.setAlimentoConsumido(true);
+                                                alimentoDisponible.setEnReservaDeAlimentos(false);
+                                                alimentosConsumidos++;
+                                            }
                                         }
                                     }
+
                                 }
                             }
 
                             animal.setEnLineaDeReposo(true);
                             cartasTablero.add(animal);
                             removedorCartas.add(animal);
-                            alimentoBajadoAlTablero = true;
+                            alimentosBajadosAlTablero++;
 
                         } else {
                             JOptionPane.showMessageDialog(null,
@@ -367,20 +373,23 @@ public class CartaService {
                             } else {
                                 int alimentosConsumidos = 0;
                                 for (Carta carta2 : cartasTablero) {
-                                    Alimento alimentoDisponible = (Alimento) carta2;
-                                    if (alimentoDisponible.isEnReservaDeAlimentos()) {
-                                        if (alimentosConsumidos < habilidad.getCoste()) {
-                                            alimentoDisponible.setAlimentoConsumido(true);
-                                            alimentoDisponible.setEnReservaDeAlimentos(false);
-                                            alimentosConsumidos++;
+                                    if (carta2 instanceof Alimento) {
+                                        Alimento alimentoDisponible = (Alimento) carta2;
+                                        if (alimentoDisponible.isEnReservaDeAlimentos()) {
+                                            if (alimentosConsumidos < habilidad.getCoste()) {
+                                                alimentoDisponible.setAlimentoConsumido(true);
+                                                alimentoDisponible.setEnReservaDeAlimentos(false);
+                                                alimentosConsumidos++;
+                                            }
                                         }
                                     }
+
                                 }
                             }
 
                             habilidad.activarEfecto();
                             removedorCartas.add(habilidad);
-                            alimentoBajadoAlTablero = true;
+                            alimentosBajadosAlTablero++;
 
                         } else {
                             JOptionPane.showMessageDialog(null,
@@ -392,29 +401,32 @@ public class CartaService {
                         Habitat habitat = (Habitat) carta;
 
                         if (reservaAlimentos >= habitat.getCoste()) {
-                            JOptionPane.showMessageDialog(null, "Has agregado un animal a tu linea defensvia",
-                                    "Linea defensiva", 1);
+                            JOptionPane.showMessageDialog(null, "Has agregado un animal a tu linea de reposo",
+                                    "Linea de reposo", 1);
                             if (habitat.getCoste() == 0) {
 
                             } else {
                                 int alimentosConsumidos = 0;
 
                                 for (Carta carta2 : cartasTablero) {
-                                    Alimento alimentoDisponible = (Alimento) carta2;
-                                    if (alimentoDisponible.isEnReservaDeAlimentos()) {
-                                        if (alimentosConsumidos < habitat.getCoste()) {
-                                            alimentoDisponible.setAlimentoConsumido(true);
-                                            alimentoDisponible.setEnReservaDeAlimentos(false);
-                                            alimentosConsumidos++;
+                                    if (carta2 instanceof Alimento) {
+                                        Alimento alimentoDisponible = (Alimento) carta2;
+                                        if (alimentoDisponible.isEnReservaDeAlimentos()) {
+                                            if (alimentosConsumidos < habitat.getCoste()) {
+                                                alimentoDisponible.setAlimentoConsumido(true);
+                                                alimentoDisponible.setEnReservaDeAlimentos(false);
+                                                alimentosConsumidos++;
+                                            }
                                         }
                                     }
+
                                 }
                             }
 
                             habitat.setEnLineaApoyo(true);
                             cartasTablero.add(habitat);
                             removedorCartas.add(habitat);
-                            alimentoBajadoAlTablero = true;
+                            alimentosBajadosAlTablero++;
                         } else {
                             JOptionPane.showMessageDialog(null,
                                     "Actualmente no tienes alimentos suficientes para pagar el coste de esta carta.",
@@ -426,24 +438,54 @@ public class CartaService {
                 }
             }
 
-            cartasEnMano.removeAll(removedorCartas);
             cartasDisponiblesParaBajar.clear();
-            removedorCartas.clear();
 
-            System.out.println("carta encontrada: " + cartaEncontrada);
             if (!cartaEncontrada) {
 
                 JOptionPane.showMessageDialog(null, "Has ingresado un [ID] incorrecto", "[ID] incorrecto", 0);
-                bajarCartaAlTablero();
+                bajarCartaAlTablero(alimentosBajadosAlTablero);
 
             }
         } else {
             JOptionPane.showMessageDialog(null, "Actualmente no tienes cartas disponibles para bajar al tablero",
                     "Sin cartas disponibles", JOptionPane.WARNING_MESSAGE);
         }
+
+        cartasEnMano.removeAll(removedorCartas);
+        removedorCartas.clear();
+
+        return alimentosBajadosAlTablero;
     }
 
-    private int devolverCantidadAlimentosEnReserva() {
+    public void reagruparAlimentos() {
+
+        for (Carta carta : cartasTablero) {
+            if (carta instanceof Alimento) {
+                Alimento alimento = (Alimento) carta;
+                if (alimento.isAlimentoConsumido()) {
+                    alimento.setAlimentoConsumido(false);
+                    alimento.setEnReservaDeAlimentos(true);
+                }
+            }
+        }
+
+    }
+
+    public void reagruparAnimalesEnZonaBatalla() {
+
+        for (Carta carta : cartasTablero) {
+            if (carta instanceof Animal) {
+                Animal animal = (Animal) carta;
+                if (animal.isEnLineaDeBatalla()) {
+                    animal.setEnLineaDeBatalla(false);
+                    animal.setEnLineaDeReposo(true);
+                }
+
+            }
+        }
+    }
+
+    public int devolverCantidadAlimentosEnReserva() {
 
         List<Carta> alimentos = new ArrayList<Carta>();
 
@@ -461,35 +503,6 @@ public class CartaService {
                 .forEach((carta) -> animalesEnReposo.add(carta));
 
         return animalesEnReposo.size();
-    }
-
-    public void reagruparAlimentos() {
-        for (Carta carta : cartasTablero) {
-            if (cartasTablero instanceof Alimento) {
-                Alimento alimento = (Alimento) carta;
-
-                if (alimento.isAlimentoConsumido()) {
-                    alimento.setAlimentoConsumido(false);
-                    alimento.setEnReservaDeAlimentos(true);
-                }
-
-            }
-        }
-
-    }
-
-    public void reagruparAnimalesEnZonaBatalla() {
-        for (Carta carta : cartasTablero) {
-            if (cartasTablero instanceof Animal) {
-
-                Animal animal = (Animal) carta;
-                if (animal.isEnLineaDeBatalla()) {
-                    animal.setEnLineaDeBatalla(false);
-                    animal.setEnLineaDeReposo(true);
-                }
-
-            }
-        }
     }
 
     public Carta seleccionarAnimalAtacanteEnReposo() {
@@ -533,10 +546,11 @@ public class CartaService {
                 .forEach((carta) -> animalesEnReposo.add(carta));
 
         boolean animalEncontrado = false;
-        int idAnimalEscogido = Integer.parseInt(JOptionPane.showInputDialog(null,
-                "Ingresa el ID del animal seleccionado para atacar", "[ID] del animal"));
 
         Inspector.inspeccionarMultiplesCartasPorZona(animalesEnReposo);
+
+        int idAnimalEscogido = Integer.parseInt(JOptionPane.showInputDialog(null,
+                "Ingresa el ID del animal seleccionado para atacar", "[ID] del animal"));
 
         while (!animalEncontrado) {
             for (Carta animalDefensorActual : animalesEnReposo) {
@@ -562,6 +576,9 @@ public class CartaService {
         Animal animalDefensor = (Animal) cartaDefensora;
 
         if (animalAtacante.getDano() == animalDefensor.getDano()) {
+            JOptionPane.showMessageDialog(null,
+                    "Ambos animales han sido destruidos por tener la misma puntuación de combate.", "Igualdad de daño",
+                    JOptionPane.WARNING_MESSAGE);
             animalAtacante.setEnLineaDeBatalla(false);
             animalAtacante.setEnCementerio(true);
 
@@ -569,19 +586,26 @@ public class CartaService {
             animalDefensor.setEnCementerio(true);
 
         } else if (animalAtacante.getDano() < animalDefensor.getDano()) {
+            JOptionPane.showMessageDialog(null,
+                    "El animal " + animalAtacante.getNombre()
+                            + " ha sido destruido por tener menor puntuación de combate.",
+                    animalAtacante.getNombre() + "destruido", JOptionPane.ERROR_MESSAGE);
+
             animalAtacante.setEnLineaDeBatalla(false);
             animalAtacante.setEnCementerio(true);
 
         } else if (animalAtacante.getDano() > animalDefensor.getDano()) {
+
+            JOptionPane.showMessageDialog(null,
+                    "El animal " + animalDefensor.getNombre()
+                            + " ha sido destruido por tener menor puntuación de combate.",
+                    animalDefensor.getNombre() + "destruido", JOptionPane.ERROR_MESSAGE);
+
             animalDefensor.setEnLineaDeBatalla(false);
             animalDefensor.setEnCementerio(true);
         }
 
         return animalAtacante.getDano() - animalDefensor.getDano();
-    }
-
-    public int getCantidadCartasMazo() {
-        return cartasMazo.size();
     }
 
     public int botarCartasMazo(Carta cartaAtacante) {
@@ -614,7 +638,7 @@ public class CartaService {
         auxiliar.clear();
     }
 
-    public void verAlimentosConsumidos() {
+    public void verCantidadAlimentosConsumidos() {
         List<Carta> auxiliar = new ArrayList<Carta>();
 
         for (Carta carta : cartasTablero) {
@@ -631,7 +655,7 @@ public class CartaService {
         Inspector.inspeccionarMultiplesCartasPorZona(auxiliar);
     }
 
-    public void verAlimentosDisponibles() {
+    public void verCantidadAlimentosDisponibles() {
         List<Carta> auxiliar = new ArrayList<Carta>();
 
         for (Carta carta : cartasTablero) {
@@ -648,7 +672,7 @@ public class CartaService {
         Inspector.inspeccionarMultiplesCartasPorZona(auxiliar);
     }
 
-    public void verAnimalesReposo() {
+    public void verCantidadAnimalesReposo() {
         List<Carta> auxiliar = new ArrayList<Carta>();
 
         for (Carta carta : cartasTablero) {
@@ -665,7 +689,7 @@ public class CartaService {
         Inspector.inspeccionarMultiplesCartasPorZona(auxiliar);
     }
 
-    public void verAnimalesBatalla() {
+    public void verCantidadAnimalesBatalla() {
         List<Carta> auxiliar = new ArrayList<Carta>();
 
         for (Carta carta : cartasTablero) {

@@ -2,7 +2,6 @@ package domain.derivada;
 
 import javax.swing.JOptionPane;
 
-import domain.base.Animal;
 import domain.base.Carta;
 import service.CartaService;
 
@@ -12,10 +11,12 @@ public class Jugador {
     private String contrasena;
     private int mazoSeleccionado;
     private int turno = 1;
+    private int alimentosBajadosAlTablero;
 
     public Jugador(String nombreUsuario, String contrasena) {
         this.nombreUsuario = nombreUsuario;
         this.contrasena = contrasena;
+        alimentosBajadosAlTablero = 0;
         cartaService = new CartaService();
 
         seleccionarTipoMazo();
@@ -46,8 +47,12 @@ public class Jugador {
         return cartaService.getCantidadCartasMazo();
     }
 
-    public void atacar() {
+    public int getAlimentosBajadosAlTablero() {
+        return alimentosBajadosAlTablero;
+    }
 
+    public void setAlimentosBajadosAlTablero(int alimentosBajadosAlTablero) {
+        this.alimentosBajadosAlTablero = alimentosBajadosAlTablero;
     }
 
     public void robarCarta() {
@@ -98,8 +103,8 @@ public class Jugador {
         cartaService.robarManoInicialCartas();
     }
 
-    public void bajarCartaAlTablero() {
-        cartaService.bajarCartaAlTablero();
+    public int bajarCartaAlTablero(int alimentosBajadosAlTablero) {
+        return cartaService.bajarCartaAlTablero(alimentosBajadosAlTablero);
     }
 
     private void seleccionarTipoMazo() {
@@ -113,19 +118,19 @@ public class Jugador {
     }
 
     public void verAnimalesBatalla() {
-        cartaService.verAnimalesBatalla();
+        cartaService.verCantidadAnimalesBatalla();
     }
 
     public void verAnimalesReposo() {
-        cartaService.verAnimalesReposo();
+        cartaService.verCantidadAnimalesReposo();
     }
 
     public void verAlimentosConsumidos() {
-        cartaService.verAlimentosConsumidos();
+        cartaService.verCantidadAlimentosConsumidos();
     }
 
     public void verAlimentosDisponibles() {
-        cartaService.verAlimentosDisponibles();
+        cartaService.verCantidadAlimentosDisponibles();
     }
 
 }

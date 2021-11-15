@@ -223,10 +223,39 @@ public class Game {
 
                         jugadorActual.robarManoInicialCartas();
 
+                } else if (jugadorActual.getTurno() == 2) {
+
+                        String[] opcionesTurno = { "Bajar una carta", "Activar un efecto", "Pasar" };
+                        int opcionElegida = JOptionPane.showOptionDialog(null,
+                                        "Turno " + jugadorActual.getTurno() + ". ¿" + jugadorActual.getnombreUsuario()
+                                                        + " que deseas hacer?",
+                                        "Turno: " + jugadorActual.getTurno(), JOptionPane.DEFAULT_OPTION,
+                                        JOptionPane.QUESTION_MESSAGE, null, opcionesTurno, 2);
+
+                        while (opcionElegida != 2) {
+                                if (opcionElegida == 0) {
+                                        jugadorActual.setAlimentosBajadosAlTablero(jugadorActual.bajarCartaAlTablero(
+                                                        jugadorActual.getAlimentosBajadosAlTablero()));
+
+                                } else if (opcionElegida == 1) {
+                                        JOptionPane.showMessageDialog(null, "Aún no codeado", "Aun no codeado",
+                                                        JOptionPane.ERROR_MESSAGE);
+                                }
+
+                                opcionElegida = JOptionPane.showOptionDialog(null, "Turno " + jugadorActual.getTurno()
+                                                + ". ¿" + jugadorActual.getnombreUsuario() + " que deseas hacer?",
+                                                "Turno: " + jugadorActual.getTurno(), JOptionPane.DEFAULT_OPTION,
+                                                JOptionPane.QUESTION_MESSAGE, null, opcionesTurno, 2);
+                        }
+
+                        jugadorActual.robarCarta();
+                        JOptionPane.showMessageDialog(null, "Fin de turno " + jugadorActual.getTurno(), "Fin Turno",
+                                        JOptionPane.INFORMATION_MESSAGE, null);
                 } else {
 
                         jugadorActual.reagruparAlimentos();
                         jugadorActual.reagruparAnimalesEnZonaBatalla();
+                        jugadorActual.setAlimentosBajadosAlTablero(0);
 
                         String[] opcionesTurno = { "Bajar una carta", "Atacar", "Activar un efecto", "Pasar" };
                         int opcionElegida = JOptionPane.showOptionDialog(null,
@@ -237,7 +266,8 @@ public class Game {
 
                         while (opcionElegida != 3) {
                                 if (opcionElegida == 0) {
-                                        jugadorActual.bajarCartaAlTablero();
+                                        jugadorActual.setAlimentosBajadosAlTablero(jugadorActual.bajarCartaAlTablero(
+                                                        jugadorActual.getAlimentosBajadosAlTablero()));
 
                                 } else if (opcionElegida == 1) {
 
@@ -355,12 +385,12 @@ public class Game {
                                                 JOptionPane.QUESTION_MESSAGE, null, opcionesTurno, 2);
                         }
 
+                        jugadorActual.robarCarta();
                         JOptionPane.showMessageDialog(null, "Fin de turno " + jugadorActual.getTurno(), "Fin Turno",
                                         JOptionPane.INFORMATION_MESSAGE, null);
-                        jugadorActual.robarCarta();
 
                 }
-                
+
                 jugadorActual.setTurno(jugadorActual.getTurno() + 1);
         }
 
